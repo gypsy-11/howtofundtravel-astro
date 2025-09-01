@@ -1,0 +1,25 @@
+---
+import LeadMagnetBase from './LeadMagnetBase.astro';
+
+export interface Props {
+  formId?: string;
+}
+
+const { formId } = Astro.props;
+---
+
+<LeadMagnetBase
+  title="Get Your Free Remote Work Job Sites Bookmarks"
+  description="Skip the crowded job boards! Get instant access to 30+ specialized remote work job sites for digital nomads. Find better opportunities and higher pay."
+  buttonText="Get Free Access"
+  apiEndpoint="/api/job-bookmarks-lead-magnet"
+  redirectUrl="/thank-you-job-bookmarks"
+  formId={formId}
+>
+  <div slot="benefits" class="lead-magnet-benefits" style="background-color: white; border-radius: 10px; padding: 20px; margin: 20px 0; max-width: 90%; margin-left: auto; margin-right: auto; text-align: left;">
+    <p>30+ specialized remote job sites</p>
+    <p>Platforms with less competition</p>
+    <p>High-paying remote opportunities</p>
+    <p>Simply import into your browser bookmarks</p>
+  </div>
+</LeadMagnetBase>

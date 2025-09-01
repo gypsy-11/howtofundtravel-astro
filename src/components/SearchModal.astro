@@ -1,0 +1,813 @@
+---
+// Search Modal Component
+// Provides site-wide search functionality for blog posts, case studies, and pages
+---
+
+<!-- Search Modal -->
+<div class="search-modal" id="search-modal" aria-hidden="true">
+  <div class="search-overlay"></div>
+  <div class="search-container">
+    <div class="search-header">
+      <div class="search-input-wrapper">
+        <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24">
+          <path fill="currentColor" d="M15.5 14h-.79l-.28-.27c.98-1.14 1.57-2.62 1.57-4.23 0-3.59-2.91-6.5-6.5-6.5S2.5 5.91 2.5 9.5s2.91 6.5 6.5 6.5c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+        </svg>
+        <input 
+          type="text" 
+          id="search-input" 
+          class="search-input" 
+          placeholder="Search for travel funding tips, remote work strategies, AI tools..."
+          aria-label="Search the website"
+        >
+        <button class="search-clear" id="search-clear" aria-label="Clear search">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <button class="search-close" id="search-close" aria-label="Close search">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+    
+    <div class="search-content">
+      <div class="search-results" id="search-results">
+        <div class="search-placeholder">
+          <div class="search-placeholder-icon">🔍</div>
+          <p>Start typing to search for travel funding tips, remote work strategies, AI tools, and more...</p>
+        </div>
+      </div>
+      
+      <div class="search-loading" id="search-loading" style="display: none;">
+        <div class="loading-spinner"></div>
+        <p>Searching...</p>
+      </div>
+      
+      <div class="search-no-results" id="search-no-results" style="display: none;">
+        <div class="no-results-icon">😕</div>
+        <h3>No results found</h3>
+        <p>Try different keywords or browse our categories:</p>
+        <div class="search-categories">
+          <a href="/blog/category/remote-work" class="search-category">Remote Work</a>
+          <a href="/blog/category/online-business" class="search-category">Online Business</a>
+          <a href="/blog/category/ai-tools" class="search-category">AI Tools</a>
+          <a href="/case-studies/" class="search-category">Case Studies</a>
+        </div>
+      </div>
+    </div>
+    
+    <div class="search-footer">
+      <div class="search-shortcuts">
+        <span class="shortcut-label">Keyboard shortcuts:</span>
+        <kbd>⌘</kbd> + <kbd>K</kbd> to open
+        <kbd>Esc</kbd> to close
+        <kbd>↑</kbd> <kbd>↓</kbd> to navigate
+        <kbd>Enter</kbd> to select
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  class SearchModal {
+    constructor() {
+      this.modal = document.getElementById('search-modal');
+      this.overlay = this.modal?.querySelector('.search-overlay');
+      this.input = document.getElementById('search-input');
+      this.clearBtn = document.getElementById('search-clear');
+      this.closeBtn = document.getElementById('search-close');
+      this.results = document.getElementById('search-results');
+      this.loading = document.getElementById('search-loading');
+      this.noResults = document.getElementById('search-no-results');
+      this.isOpen = false;
+      this.searchData = [];
+      this.currentIndex = -1;
+      this.searchTimeout = null;
+      
+      this.init();
+    }
+    
+    async init() {
+      // Load search data
+      await this.loadSearchData();
+      
+      // Event listeners
+      this.overlay?.addEventListener('click', () => this.close());
+      this.closeBtn?.addEventListener('click', () => this.close());
+      this.clearBtn?.addEventListener('click', () => this.clearSearch());
+      
+      // Input events
+      this.input?.addEventListener('input', (e) => this.handleSearch(e.target.value));
+      this.input?.addEventListener('keydown', (e) => this.handleKeydown(e));
+      
+      // Global keyboard shortcuts
+      document.addEventListener('keydown', (e) => {
+        // Cmd/Ctrl + K to open search
+        if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+          e.preventDefault();
+          this.open();
+        }
+        
+        // Escape to close search
+        if (e.key === 'Escape' && this.isOpen) {
+          this.close();
+        }
+      });
+      
+      // Focus management
+      this.modal?.addEventListener('keydown', (e) => {
+        if (e.key === 'Tab') {
+          this.handleTabNavigation(e);
+        }
+      });
+    }
+    
+    async loadSearchData() {
+      try {
+        // In a real implementation, this would fetch from an API
+        // For now, we'll use a simple approach with predefined data
+        this.searchData = [
+          {
+            type: 'blog',
+            title: 'Top 50 AI Tools for 2025',
+            description: 'Comprehensive guide to the best AI tools for digital nomads and remote workers',
+            url: '/blog/top-50-ai-tools-2025',
+            tags: ['AI tools', 'digital nomad', 'productivity'],
+            category: 'AI Tools'
+          },
+          {
+            type: 'blog',
+            title: 'How to Fund Travel with Remote Work',
+            description: 'Complete guide to earning money while traveling the world',
+            url: '/blog/fundtravelremotework',
+            tags: ['remote work', 'travel funding', 'digital nomad'],
+            category: 'Remote Work'
+          },
+          {
+            type: 'blog',
+            title: '35 Remote Work Sites for 2025',
+            description: 'Best websites to find remote work opportunities',
+            url: '/blog/35-remote-work-sites-for-2025',
+            tags: ['remote work', 'job sites', 'work from anywhere'],
+            category: 'Remote Work'
+          },
+          {
+            type: 'blog',
+            title: 'AI Productivity Breakthrough: 35 Hours to 3 Hours',
+            description: 'How AI tools can dramatically increase your productivity',
+            url: '/blog/ai-productivity-breakthrough-35-hours-3-hours',
+            tags: ['AI tools', 'productivity', 'time management'],
+            category: 'AI Tools'
+          },
+          {
+            type: 'blog',
+            title: 'How to Build an Online Business to Fund Travel',
+            description: 'Step-by-step guide to creating location-independent income',
+            url: '/blog/fundtravelbuildonlinebusiness',
+            tags: ['online business', 'entrepreneurship', 'passive income'],
+            category: 'Online Business'
+          },
+          {
+            type: 'case-study',
+            title: 'Neurodivergent Coaching Website SEO',
+            description: 'SEO optimization case study with 300% traffic increase',
+            url: '/case-studies/neurodivergent-coaching-website-seo',
+            tags: ['SEO', 'case study', 'website optimization'],
+            category: 'Case Studies'
+          },
+          {
+            type: 'case-study',
+            title: 'Mikkel Hansen Website Case Study',
+            description: 'AI-powered website development for men\'s mentoring business',
+            url: '/case-studies/mikkel-hansen-website-case-study',
+            tags: ['AI development', 'case study', 'website design'],
+            category: 'Case Studies'
+          },
+          {
+            type: 'page',
+            title: 'About Melissa',
+            description: 'Learn about Melissa\'s journey as a family travel expert',
+            url: '/about',
+            tags: ['about', 'family travel', 'digital nomad'],
+            category: 'About'
+          }
+        ];
+      } catch (error) {
+        console.error('Error loading search data:', error);
+      }
+    }
+    
+    open() {
+      this.isOpen = true;
+      this.modal?.classList.add('active');
+      document.body.classList.add('search-open');
+      this.input?.focus();
+      
+      // Prevent body scroll
+      document.body.style.overflow = 'hidden';
+    }
+    
+    close() {
+      this.isOpen = false;
+      this.modal?.classList.remove('active');
+      document.body.classList.remove('search-open');
+      document.body.style.overflow = '';
+      
+      // Clear search
+      this.clearSearch();
+    }
+    
+    clearSearch() {
+      if (this.input) {
+        this.input.value = '';
+        this.showPlaceholder();
+      }
+    }
+    
+    handleSearch(query) {
+      // Clear previous timeout
+      if (this.searchTimeout) {
+        clearTimeout(this.searchTimeout);
+      }
+      
+      // Debounce search
+      this.searchTimeout = setTimeout(() => {
+        this.performSearch(query);
+      }, 300);
+    }
+    
+    performSearch(query) {
+      if (!query.trim()) {
+        this.showPlaceholder();
+        return;
+      }
+      
+      this.showLoading();
+      
+      // Simulate search delay
+      setTimeout(() => {
+        const results = this.searchData.filter(item => {
+          const searchText = `${item.title} ${item.description} ${item.tags.join(' ')} ${item.category}`.toLowerCase();
+          const queryLower = query.toLowerCase();
+          return searchText.includes(queryLower);
+        });
+        
+        this.displayResults(results, query);
+      }, 200);
+    }
+    
+    displayResults(results, query) {
+      this.hideLoading();
+      
+      if (results.length === 0) {
+        this.showNoResults();
+        return;
+      }
+      
+      const resultsHtml = results.map((item, index) => {
+        const highlightedTitle = this.highlightText(item.title, query);
+        const highlightedDescription = this.highlightText(item.description, query);
+        
+        return `
+          <div class="search-result" data-index="${index}" data-url="${item.url}">
+            <div class="search-result-content">
+              <div class="search-result-header">
+                <h3 class="search-result-title">${highlightedTitle}</h3>
+                <span class="search-result-type ${item.type}">${this.getTypeLabel(item.type)}</span>
+              </div>
+              <p class="search-result-description">${highlightedDescription}</p>
+              <div class="search-result-meta">
+                <span class="search-result-category">${item.category}</span>
+                <div class="search-result-tags">
+                  ${item.tags.slice(0, 3).map(tag => `<span class="search-result-tag">${tag}</span>`).join('')}
+                </div>
+              </div>
+            </div>
+            <div class="search-result-arrow">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="9,18 15,12 9,6"></polyline>
+              </svg>
+            </div>
+          </div>
+        `;
+      }).join('');
+      
+      this.results.innerHTML = resultsHtml;
+      this.addResultEventListeners();
+    }
+    
+    highlightText(text, query) {
+      const regex = new RegExp(`(${query})`, 'gi');
+      return text.replace(regex, '<mark>$1</mark>');
+    }
+    
+    getTypeLabel(type) {
+      const labels = {
+        'blog': 'Blog Post',
+        'case-study': 'Case Study',
+        'page': 'Page'
+      };
+      return labels[type] || type;
+    }
+    
+    showPlaceholder() {
+      this.results.innerHTML = `
+        <div class="search-placeholder">
+          <div class="search-placeholder-icon">🔍</div>
+          <p>Start typing to search for travel funding tips, remote work strategies, AI tools, and more...</p>
+        </div>
+      `;
+    }
+    
+    showLoading() {
+      this.loading.style.display = 'flex';
+      this.noResults.style.display = 'none';
+    }
+    
+    hideLoading() {
+      this.loading.style.display = 'none';
+    }
+    
+    showNoResults() {
+      this.noResults.style.display = 'block';
+    }
+    
+    addResultEventListeners() {
+      const resultElements = this.results.querySelectorAll('.search-result');
+      
+      resultElements.forEach((element, index) => {
+        element.addEventListener('click', () => {
+          const url = element.getAttribute('data-url');
+          if (url) {
+            window.location.href = url;
+          }
+        });
+        
+        element.addEventListener('mouseenter', () => {
+          this.currentIndex = index;
+          this.updateSelection();
+        });
+      });
+    }
+    
+    handleKeydown(e) {
+      const resultElements = this.results.querySelectorAll('.search-result');
+      
+      switch (e.key) {
+        case 'ArrowDown':
+          e.preventDefault();
+          this.currentIndex = Math.min(this.currentIndex + 1, resultElements.length - 1);
+          this.updateSelection();
+          break;
+          
+        case 'ArrowUp':
+          e.preventDefault();
+          this.currentIndex = Math.max(this.currentIndex - 1, -1);
+          this.updateSelection();
+          break;
+          
+        case 'Enter':
+          e.preventDefault();
+          if (this.currentIndex >= 0 && resultElements[this.currentIndex]) {
+            const url = resultElements[this.currentIndex].getAttribute('data-url');
+            if (url) {
+              window.location.href = url;
+            }
+          }
+          break;
+      }
+    }
+    
+    updateSelection() {
+      const resultElements = this.results.querySelectorAll('.search-result');
+      
+      resultElements.forEach((element, index) => {
+        if (index === this.currentIndex) {
+          element.classList.add('selected');
+          element.scrollIntoView({ block: 'nearest' });
+        } else {
+          element.classList.remove('selected');
+        }
+      });
+    }
+    
+    handleTabNavigation(e) {
+      const focusableElements = this.modal?.querySelectorAll('button, input, a');
+      const firstElement = focusableElements?.[0];
+      const lastElement = focusableElements?.[focusableElements.length - 1];
+      
+      if (e.shiftKey) {
+        if (document.activeElement === firstElement) {
+          e.preventDefault();
+          lastElement?.focus();
+        }
+      } else {
+        if (document.activeElement === lastElement) {
+          e.preventDefault();
+          firstElement?.focus();
+        }
+      }
+    }
+  }
+  
+  // Initialize search when DOM is ready
+  document.addEventListener('DOMContentLoaded', () => {
+    new SearchModal();
+  });
+</script>
+
+<style>
+  /* Search Modal Styles */
+  .search-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .search-modal.active {
+    opacity: 1;
+    visibility: visible;
+  }
+  
+  .search-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(8px);
+  }
+  
+  .search-container {
+    position: relative;
+    width: 100%;
+    max-width: 800px;
+    height: 100%;
+    max-height: 600px;
+    margin: 50px auto;
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  
+  /* Search Header */
+  .search-header {
+    display: flex;
+    align-items: center;
+    padding: var(--space-lg);
+    border-bottom: 1px solid var(--border-color);
+    background: var(--light-gray);
+  }
+  
+  .search-input-wrapper {
+    flex: 1;
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  
+  .search-input {
+    width: 100%;
+    padding: var(--space-md) var(--space-md) var(--space-md) 48px;
+    border: 2px solid var(--border-color);
+    border-radius: var(--radius-md);
+    font-size: 1.1rem;
+    background: var(--white);
+    transition: all 0.2s ease;
+  }
+  
+  .search-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(42, 157, 143, 0.1);
+  }
+  
+  .search-icon {
+    position: absolute;
+    left: var(--space-md);
+    color: var(--text-gray);
+    pointer-events: none;
+  }
+  
+  .search-clear {
+    position: absolute;
+    right: var(--space-md);
+    background: none;
+    border: none;
+    color: var(--text-gray);
+    cursor: pointer;
+    padding: var(--space-xs);
+    border-radius: var(--radius-sm);
+    transition: all 0.2s ease;
+  }
+  
+  .search-clear:hover {
+    background: var(--border-color);
+    color: var(--dark);
+  }
+  
+  .search-close {
+    margin-left: var(--space-md);
+    background: none;
+    border: none;
+    color: var(--text-gray);
+    cursor: pointer;
+    padding: var(--space-sm);
+    border-radius: var(--radius-sm);
+    transition: all 0.2s ease;
+  }
+  
+  .search-close:hover {
+    background: var(--border-color);
+    color: var(--dark);
+  }
+  
+  /* Search Content */
+  .search-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: var(--space-lg);
+  }
+  
+  .search-placeholder {
+    text-align: center;
+    padding: var(--space-xxl) var(--space-lg);
+    color: var(--text-gray);
+  }
+  
+  .search-placeholder-icon {
+    font-size: 3rem;
+    margin-bottom: var(--space-md);
+  }
+  
+  .search-placeholder p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+  }
+  
+  /* Search Results */
+  .search-result {
+    display: flex;
+    align-items: center;
+    padding: var(--space-lg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--space-md);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: var(--white);
+  }
+  
+  .search-result:hover,
+  .search-result.selected {
+    border-color: var(--primary-color);
+    background: rgba(42, 157, 143, 0.05);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  .search-result-content {
+    flex: 1;
+  }
+  
+  .search-result-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--space-sm);
+  }
+  
+  .search-result-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--dark);
+    margin: 0;
+  }
+  
+  .search-result-title mark {
+    background: rgba(42, 157, 143, 0.2);
+    color: var(--dark);
+    padding: 0 2px;
+    border-radius: 2px;
+  }
+  
+  .search-result-type {
+    font-size: 0.8rem;
+    padding: var(--space-xs) var(--space-sm);
+    border-radius: var(--radius-sm);
+    font-weight: 500;
+  }
+  
+  .search-result-type.blog {
+    background: rgba(42, 157, 143, 0.1);
+    color: var(--primary-color);
+  }
+  
+  .search-result-type.case-study {
+    background: rgba(255, 193, 7, 0.1);
+    color: #f39c12;
+  }
+  
+  .search-result-type.page {
+    background: rgba(108, 117, 125, 0.1);
+    color: #6c757d;
+  }
+  
+  .search-result-description {
+    color: var(--text-gray);
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin-bottom: var(--space-sm);
+  }
+  
+  .search-result-description mark {
+    background: rgba(42, 157, 143, 0.2);
+    color: var(--dark);
+    padding: 0 2px;
+    border-radius: 2px;
+  }
+  
+  .search-result-meta {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+  }
+  
+  .search-result-category {
+    font-size: 0.8rem;
+    color: var(--primary-color);
+    font-weight: 500;
+  }
+  
+  .search-result-tags {
+    display: flex;
+    gap: var(--space-xs);
+  }
+  
+  .search-result-tag {
+    font-size: 0.7rem;
+    padding: 2px var(--space-xs);
+    background: var(--light-gray);
+    color: var(--text-gray);
+    border-radius: var(--radius-sm);
+  }
+  
+  .search-result-arrow {
+    color: var(--text-gray);
+    margin-left: var(--space-md);
+  }
+  
+  /* Loading State */
+  .search-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-xxl);
+    color: var(--text-gray);
+  }
+  
+  .loading-spinner {
+    width: 32px;
+    height: 32px;
+    border: 3px solid var(--border-color);
+    border-top: 3px solid var(--primary-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: var(--space-md);
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  /* No Results */
+  .search-no-results {
+    text-align: center;
+    padding: var(--space-xxl) var(--space-lg);
+    color: var(--text-gray);
+  }
+  
+  .no-results-icon {
+    font-size: 3rem;
+    margin-bottom: var(--space-md);
+  }
+  
+  .search-no-results h3 {
+    color: var(--dark);
+    margin-bottom: var(--space-md);
+  }
+  
+  .search-categories {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    justify-content: center;
+    margin-top: var(--space-lg);
+  }
+  
+  .search-category {
+    padding: var(--space-sm) var(--space-md);
+    background: var(--primary-color);
+    color: var(--white);
+    text-decoration: none;
+    border-radius: var(--radius-md);
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+  }
+  
+  .search-category:hover {
+    background: var(--dark);
+    transform: translateY(-1px);
+  }
+  
+  /* Search Footer */
+  .search-footer {
+    padding: var(--space-md) var(--space-lg);
+    border-top: 1px solid var(--border-color);
+    background: var(--light-gray);
+  }
+  
+  .search-shortcuts {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    font-size: 0.8rem;
+    color: var(--text-gray);
+    flex-wrap: wrap;
+  }
+  
+  .shortcut-label {
+    font-weight: 500;
+  }
+  
+  kbd {
+    background: var(--white);
+    border: 1px solid var(--border-color);
+    border-radius: 3px;
+    padding: 2px 6px;
+    font-size: 0.7rem;
+    font-family: monospace;
+  }
+  
+  /* Body scroll prevention */
+  body.search-open {
+    overflow: hidden;
+  }
+  
+  /* Mobile optimizations */
+  @media (max-width: 768px) {
+    .search-container {
+      margin: 20px;
+      max-height: calc(100vh - 40px);
+    }
+    
+    .search-header {
+      padding: var(--space-md);
+    }
+    
+    .search-input {
+      font-size: 1rem;
+      padding: var(--space-sm) var(--space-sm) var(--space-sm) 40px;
+    }
+    
+    .search-content {
+      padding: var(--space-md);
+    }
+    
+    .search-result {
+      padding: var(--space-md);
+    }
+    
+    .search-result-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--space-xs);
+    }
+    
+    .search-result-meta {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--space-xs);
+    }
+    
+    .search-shortcuts {
+      justify-content: center;
+    }
+  }
+</style>

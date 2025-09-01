@@ -1,0 +1,622 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ResponsiveImage from '../../components/ResponsiveImage.astro';
+import BlogCategoryFilter from '../../components/BlogCategoryFilter.astro';
+
+// Get all blog posts, sorted by published date
+const posts = await getCollection('blog');
+const sortedPosts = posts
+  .filter(post => !post.data.draft)
+  .sort((a, b) => b.data.publishedDate.valueOf() - a.data.publishedDate.valueOf());
+---
+
+<BaseLayout 
+  title="Blog | How to Fund Travel"
+  description="Discover practical strategies for funding travel, building location independence, and creating a life of adventure with your family."
+  image="/images/optimized/how-to-fund-travel-balloons-hero.webp"
+  canonical="https://howtofund.travel/blog"
+>
+  <section class="hero" aria-labelledby="hero-heading">
+    <div class="container">
+      <div class="hero-content">
+        <div class="hero-badge">
+          <span class="badge-icon">📝</span>
+          Travel Funding Blog
+        </div>
+        
+        <h1 id="hero-heading">Discover <span class="highlight">Travel Funding</span> Strategies</h1>
+        
+        <p class="hero-subtitle">
+          Practical strategies for funding your <span class="highlight">travel dreams</span> and achieving <span class="highlight">location independence</span> with your family.
+        </p>
+        
+        <div class="hero-stats">
+          <div class="stat-item">
+            <span class="stat-icon">🌍</span>
+            <div class="stat-text">Location<br>Independence</div>
+          </div>
+          <div class="stat-item">
+            <span class="stat-icon">💰</span>
+            <div class="stat-text">Funding<br>Strategies</div>
+          </div>
+          <div class="stat-item">
+            <span class="stat-icon">👨‍👩‍👧‍👦</span>
+            <div class="stat-text">Family<br>Travel</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Category Filter Section -->
+  <BlogCategoryFilter showAllButton={true} />
+
+  <!-- Featured Posts Section -->
+  <section class="featured-posts" aria-labelledby="featured-heading">
+    <div class="container">
+      <h2 id="featured-heading">Featured Posts</h2>
+      <div class="blog-content-inner">
+        <div class="featured-posts-grid">
+        <!-- Key Featured Post -->
+        <article class="featured-post-card large" data-category="remote-work">
+          <a href="/blog/fundtravelremotework" class="post-link">
+            <div class="post-image">
+              <ResponsiveImage
+                src="/images/optimized/how-to-fund-travel-kayaking.webp"
+                alt="Family kayaking on a calm river surrounded by lush green mountains in Vietnam"
+                width="400"
+                height="250"
+                loading="lazy"
+                sizes="(max-width: 768px) 100vw, 400px"
+              />
+              <div class="post-category-badge">Remote Work</div>
+            </div>
+            <div class="post-content">
+              <h3>How Remote Work Funds Our Family's Adventures</h3>
+              <p>Discover how remote work can fund your family's travel adventures. Learn from our experience working from Vietnam, Turkey, Greece, Spain and more since 2021.</p>
+              <div class="post-meta">
+                <span class="read-time">8 min read</span>
+                <span class="post-date">Featured</span>
+              </div>
+            </div>
+          </a>
+        </article>
+        
+        <!-- Remote Work Strategies -->
+        <article class="featured-post-card" data-category="remote-work">
+          <a href="/blog/remote-work-strategies-for-traveling-parents" class="post-link">
+            <div class="post-image">
+              <ResponsiveImage
+                src="/images/kids-play-on-beach-how-to-fund-travel.png"
+                alt="Children playing on a beautiful beach, representing the freedom and joy of family travel while working remotely"
+                width="300"
+                height="200"
+                loading="lazy"
+                sizes="(max-width: 768px) 100vw, 300px"
+              />
+              <div class="post-category-badge">Remote Work</div>
+            </div>
+            <div class="post-content">
+              <h3>10 Remote Work Strategies for Parents Who Travel</h3>
+              <p>Proven strategies to balance full‑time work and family travel—time blocking, time zones, accommodations, tech, and more.</p>
+              <div class="post-meta">
+                <span class="read-time">8 min read</span>
+                <span class="post-date">Latest</span>
+              </div>
+            </div>
+          </a>
+        </article>
+        
+        <!-- AI Productivity -->
+        <article class="featured-post-card" data-category="online-business">
+          <a href="/blog/ai-productivity-breakthrough-35-hours-3-hours" class="post-link">
+            <div class="post-image">
+              <ResponsiveImage
+                src="/images/optimized/G0104928.webp"
+                alt="Woman working efficiently with AI tools on laptop in tropical setting"
+                width="300"
+                height="200"
+                loading="lazy"
+                sizes="(max-width: 768px) 100vw, 300px"
+              />
+              <div class="post-category-badge">Online Business</div>
+            </div>
+            <div class="post-content">
+              <h3>How I Compressed 35 Hours of Work Into 3 Hours</h3>
+              <p>Discover the AI productivity breakthrough that changed everything. Learn the exact strategies that helped achieve 35 hours of work output in just 3 hours.</p>
+              <div class="post-meta">
+                <span class="read-time">8 min read</span>
+                <span class="post-date">Featured</span>
+              </div>
+            </div>
+          </a>
+        </article>
+        
+        <!-- Remote Work Sites -->
+        <article class="featured-post-card" data-category="remote-work">
+          <a href="/blog/35-remote-work-sites-for-2025" class="post-link">
+            <div class="post-image">
+              <ResponsiveImage
+                src="/images/optimized/how-to-fund-travel-melissa-work-anywhere.webp"
+                alt="Melissa working remotely on her laptop while traveling"
+                width="300"
+                height="200"
+                loading="lazy"
+                sizes="(max-width: 768px) 100vw, 300px"
+              />
+              <div class="post-category-badge">Remote Work</div>
+            </div>
+            <div class="post-content">
+              <h3>30+ Best Remote Job Sites for Digital Nomads in 2025</h3>
+              <p>Discover the best remote job sites for digital nomads in 2025. Skip crowded platforms and find specialized job boards with better opportunities.</p>
+              <div class="post-meta">
+                <span class="read-time">15 min read</span>
+                <span class="post-date">Latest</span>
+              </div>
+            </div>
+          </a>
+        </article>
+        
+        <!-- AI Tools -->
+        <article class="featured-post-card" data-category="online-business">
+          <a href="/blog/top-50-ai-tools-2025" class="post-link">
+            <div class="post-image">
+              <img src="https://images.unsplash.com/photo-1586227740560-8cf2732c1531?q=80&w=1261&auto=format&fit=crop&ixlib=rb-4.1.0" alt="AI tools concept with futuristic interface" width="300" height="200" loading="lazy">
+              <div class="post-category-badge">Online Business</div>
+            </div>
+            <div class="post-content">
+              <h3>Top 50 AI Tools for Digital Nomads in 2025</h3>
+              <p>The ultimate guide to AI tools that will transform your digital nomad business in 2025. Ranked by ease of use and impact.</p>
+              <div class="post-meta">
+                <span class="read-time">12 min read</span>
+                <span class="post-date">Latest</span>
+              </div>
+            </div>
+          </a>
+        </article>
+      </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="blog-content">
+    <div class="container">
+      <h2>All Posts</h2>
+      <div class="blog-content-inner">
+        <div class="blog-grid">
+        {sortedPosts.map((post) => (
+          <article class="blog-card" data-category={post.data.category[0].toLowerCase().replace(/\s+/g, '-')}>
+            {post.data.image && (
+              <div class="blog-card-image">
+                <a href={`/blog/${post.slug}`} class="blog-card-image-link">
+                  <ResponsiveImage
+                    src={post.data.image}
+                    alt={post.data.title}
+                    width="400"
+                    height="300"
+                    loading="lazy"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  />
+                </a>
+              </div>
+            )}
+            <div class="blog-card-content">
+              <h2><a href={`/blog/${post.slug}`}>{post.data.title}</a></h2>
+              <p>{post.data.description}</p>
+              <div class="blog-card-meta">
+                <span class="date">
+                  {post.data.publishedDate.toLocaleDateString('en-US', { 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                  })}
+                </span>
+                <span class="category">{post.data.category[0]}</span>
+              </div>
+            </div>
+          </article>
+        ))}
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* Lemon Tuesday font is now loaded from local file via main.css */
+
+  /* Hero highlight style */
+  .hero .highlight {
+    font-family: 'Lemon Tuesday', 'Shadows Into Light', cursive;
+    color: #2A9D8F;
+  }
+
+  /* Hero Section */
+  .hero {
+    position: relative;
+    padding: 6rem 0;
+    background: url('/images/optimized/ocean-shores-transparency.webp') no-repeat center center;
+    background-size: cover;
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    color: var(--dark);
+    text-align: center;
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .hero-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--primary-color);
+    color: var(--white);
+    padding: 0.5rem 1rem;
+    border-radius: 25px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    margin-left: auto;
+    margin-right: auto;
+    width: fit-content;
+  }
+
+  .badge-icon {
+    font-size: 1.1rem;
+  }
+
+  .hero h1 {
+    color: var(--dark);
+    margin-bottom: 1.5rem;
+    text-shadow: 0 2px 4px rgba(255, 255, 255, 0.8);
+    font-size: 3.5rem;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  .hero .highlight {
+    font-family: 'Lemon Tuesday', 'Shadows Into Light', cursive;
+    color: #2A9D8F;
+  }
+
+  .hero-subtitle {
+    color: var(--dark);
+    margin-bottom: 2rem;
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+    font-weight: 500;
+    font-size: 1.25rem;
+    line-height: 1.6;
+  }
+
+  .hero-stats {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .stat-item {
+    text-align: center;
+  }
+
+  .stat-icon {
+    font-size: 2rem;
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+
+  .stat-text {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--dark);
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+    line-height: 1.3;
+  }
+
+  /* Featured Posts Section */
+  .featured-posts {
+    padding: 4rem 0 2rem;
+    background-color: #fff;
+  }
+  
+  .featured-posts .container,
+  .blog-content .container {
+    padding: 0 var(--space-md);
+    width: 100%;
+  }
+
+  .featured-posts h2 {
+    text-align: center;
+    margin-bottom: 2rem;
+    color: var(--dark);
+    font-weight: 700;
+  }
+
+  .featured-posts-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: auto;
+    gap: 2.5rem;
+    margin-bottom: 2rem;
+    width: 100%;
+  }
+
+  .featured-post-card {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s, opacity 0.3s ease;
+    height: 100%;
+    display: block;
+  }
+
+  .featured-post-card.large {
+    grid-column: span 2;
+  }
+
+  .featured-post-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+  }
+
+  .featured-post-card .post-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    height: 100%;
+    width: 100%;
+  }
+
+  .featured-post-card .post-image {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .featured-post-card .post-image img {
+    width: 100%;
+    height: 300px; /* 3:5 aspect ratio */
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  .featured-post-card.large .post-image img {
+    height: 420px; /* Match the blog cards */
+  }
+
+  .featured-post-card:hover .post-image img {
+    transform: scale(1.03);
+  }
+
+  .featured-post-card .post-category-badge {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    background: var(--primary-color);
+    color: white;
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+
+  .featured-post-card .post-content {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+  }
+
+  .featured-post-card .post-content h3 {
+    margin-bottom: 1rem;
+    font-size: 1.4rem;
+    color: var(--primary-color);
+    line-height: 1.3;
+  }
+
+  .featured-post-card.large .post-content h3 {
+    font-size: 1.8rem;
+  }
+
+  .featured-post-card .post-content p {
+    margin-bottom: 1.5rem;
+    color: var(--medium);
+    line-height: 1.6;
+    flex-grow: 1;
+  }
+
+  .featured-post-card .post-meta {
+    display: flex;
+    justify-content: space-between;
+    color: #888;
+    font-size: 0.9rem;
+  }
+
+  .featured-post-card .post-date {
+    color: var(--primary-color);
+    font-weight: 600;
+  }
+
+  .blog-content {
+    padding: 4rem 0;
+  }
+  
+  .blog-content h2 {
+    text-align: center;
+    margin-bottom: 2rem;
+    color: var(--dark);
+    font-weight: 700;
+  }
+  
+  .blog-content-inner {
+    width: 100%;
+    margin: 0 auto;
+    padding: 0;
+  }
+
+  .blog-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+    margin-top: 2rem;
+    width: 100%;
+  }
+
+  .blog-card {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  .blog-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+  }
+
+  .blog-card-image {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+  }
+
+  .blog-card-image-link {
+    display: block;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.2s ease;
+  }
+
+  .blog-card-image-link:hover {
+    transform: scale(1.02);
+  }
+
+  .blog-card-image img {
+    width: 100%;
+    height: 420px; /* 3:5 aspect ratio for 700px width */
+    object-fit: cover;
+  }
+
+  .blog-card-content {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+  }
+
+  .blog-card-content h2 {
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    line-height: 1.3;
+  }
+
+  .blog-card-content h2 a {
+    color: #2A9D8F;
+    text-decoration: none;
+  }
+
+  .blog-card-content h2 a:hover {
+    text-decoration: underline;
+  }
+
+  .blog-card-content p {
+    color: #666;
+    margin-bottom: 1rem;
+    line-height: 1.6;
+    flex-grow: 1;
+  }
+
+  .blog-card-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+    color: #888;
+    margin-top: auto;
+  }
+  
+  .blog-card-meta .category {
+    background: #f0f0f0;
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    color: var(--primary-color);
+    font-weight: 500;
+  }
+
+  .category {
+    background: #f0f0f0;
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+  }
+
+
+  
+  /* Smooth transitions for filtered content */
+  .blog-card[style*="display: none"],
+  .featured-post-card[style*="display: none"] {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  
+  .blog-card[style*="display: block"],
+  .featured-post-card[style*="display: block"] {
+    opacity: 1;
+    transform: scale(1);
+  }
+  
+  /* Make sure both sections have the same width */
+  .featured-posts .container,
+  .blog-content .container {
+    max-width: var(--container-xl);
+  }
+
+  @media (max-width: 768px) {
+    .hero h1 {
+      font-size: 2.5rem;
+    }
+
+    .hero-stats {
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .blog-grid {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+    
+    .blog-card-image img {
+      height: 240px; /* 3:5 aspect ratio for mobile */
+    }
+    
+    .featured-posts-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .featured-post-card.large {
+      grid-column: span 1;
+    }
+    
+    .featured-post-card.large .post-image img {
+      height: 240px; /* Match the blog cards on mobile */
+    }
+    
+    .featured-post-card.large .post-content h3 {
+      font-size: 1.5rem;
+    }
+    
+
+  }
+</style>
+
+

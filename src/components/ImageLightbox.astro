@@ -1,0 +1,472 @@
+---
+// Image Lightbox Component
+// Usage: <ImageLightbox src="/path/to/image.jpg" alt="Description" class="optional-class" />
+export interface Props {
+  src: string;
+  alt: string;
+  class?: string;
+  width?: number;
+  height?: number;
+  caption?: string;
+}
+
+const { src, alt, class: className = "", width, height, caption } = Astro.props;
+---
+
+<div class="lightbox-container">
+  <img 
+    src={src} 
+    alt={alt} 
+    class={`lightbox-trigger ${className}`}
+    data-lightbox-src={src}
+    data-lightbox-alt={alt}
+    data-lightbox-caption={caption || ""}
+    width={width}
+    height={height}
+    loading="lazy"
+  />
+</div>
+
+<!-- Lightbox Modal -->
+<div class="lightbox-modal" id="lightbox-modal" aria-hidden="true">
+  <div class="lightbox-overlay"></div>
+  <div class="lightbox-content">
+    <button class="lightbox-close" aria-label="Close lightbox">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
+    
+    <button class="lightbox-nav lightbox-prev" aria-label="Previous image">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="15,18 9,12 15,6"></polyline>
+      </svg>
+    </button>
+    
+    <button class="lightbox-nav lightbox-next" aria-label="Next image">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="9,18 15,12 9,6"></polyline>
+      </svg>
+    </button>
+    
+    <div class="lightbox-image-container">
+      <img class="lightbox-image" src="" alt="" />
+      <div class="lightbox-caption"></div>
+    </div>
+    
+    <div class="lightbox-counter">
+      <span class="lightbox-current">1</span> / <span class="lightbox-total">1</span>
+    </div>
+  </div>
+</div>
+
+<script>
+  class ImageLightbox {
+    constructor() {
+      this.modal = document.getElementById('lightbox-modal');
+      this.overlay = this.modal?.querySelector('.lightbox-overlay');
+      this.image = this.modal?.querySelector('.lightbox-image');
+      this.caption = this.modal?.querySelector('.lightbox-caption');
+      this.closeBtn = this.modal?.querySelector('.lightbox-close');
+      this.prevBtn = this.modal?.querySelector('.lightbox-prev');
+      this.nextBtn = this.modal?.querySelector('.lightbox-next');
+      this.counter = this.modal?.querySelector('.lightbox-counter');
+      this.currentIndex = 0;
+      this.images = [];
+      this.isOpen = false;
+      
+      this.init();
+    }
+    
+    init() {
+      // Collect all lightbox images
+      this.images = Array.from(document.querySelectorAll('.lightbox-trigger'));
+      
+      // Add click listeners to all images
+      this.images.forEach((img, index) => {
+        img.addEventListener('click', (e) => {
+          e.preventDefault();
+          this.open(index);
+        });
+        
+        // Add keyboard support for images
+        img.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            this.open(index);
+          }
+        });
+        
+        // Make images focusable
+        img.setAttribute('tabindex', '0');
+        img.setAttribute('role', 'button');
+      });
+      
+      // Event listeners
+      this.closeBtn?.addEventListener('click', () => this.close());
+      this.overlay?.addEventListener('click', () => this.close());
+      this.prevBtn?.addEventListener('click', () => this.prev());
+      this.nextBtn?.addEventListener('click', () => this.next());
+      
+      // Keyboard navigation
+      document.addEventListener('keydown', (e) => {
+        if (!this.isOpen) return;
+        
+        switch (e.key) {
+          case 'Escape':
+            this.close();
+            break;
+          case 'ArrowLeft':
+            this.prev();
+            break;
+          case 'ArrowRight':
+            this.next();
+            break;
+        }
+      });
+      
+      // Touch/swipe support for mobile
+      this.initTouchSupport();
+    }
+    
+    open(index) {
+      if (index < 0 || index >= this.images.length) return;
+      
+      this.currentIndex = index;
+      this.isOpen = true;
+      
+      const img = this.images[index];
+      const src = img.getAttribute('data-lightbox-src');
+      const alt = img.getAttribute('data-lightbox-alt');
+      const caption = img.getAttribute('data-lightbox-caption');
+      
+      if (this.image) {
+        this.image.src = src || '';
+        this.image.alt = alt || '';
+      }
+      
+      if (this.caption) {
+        this.caption.textContent = caption || '';
+        this.caption.style.display = caption ? 'block' : 'none';
+      }
+      
+      this.updateCounter();
+      this.updateNavigation();
+      
+      this.modal?.classList.add('active');
+      document.body.classList.add('lightbox-open');
+      
+      // Focus management
+      this.closeBtn?.focus();
+      
+      // Prevent body scroll
+      document.body.style.overflow = 'hidden';
+      
+      // Track lightbox open
+      if (typeof trackLightboxOpen === 'function') {
+        trackLightboxOpen(src || '');
+      }
+    }
+    
+    close() {
+      this.isOpen = false;
+      this.modal?.classList.remove('active');
+      document.body.classList.remove('lightbox-open');
+      document.body.style.overflow = '';
+      
+      // Return focus to the image that was clicked
+      if (this.images[this.currentIndex]) {
+        this.images[this.currentIndex].focus();
+      }
+    }
+    
+    prev() {
+      const newIndex = this.currentIndex > 0 ? this.currentIndex - 1 : this.images.length - 1;
+      this.open(newIndex);
+    }
+    
+    next() {
+      const newIndex = this.currentIndex < this.images.length - 1 ? this.currentIndex + 1 : 0;
+      this.open(newIndex);
+    }
+    
+    updateCounter() {
+      if (this.counter) {
+        const current = this.counter.querySelector('.lightbox-current');
+        const total = this.counter.querySelector('.lightbox-total');
+        if (current) current.textContent = String(this.currentIndex + 1);
+        if (total) total.textContent = String(this.images.length);
+      }
+    }
+    
+    updateNavigation() {
+      if (this.prevBtn) {
+        this.prevBtn.style.display = this.images.length > 1 ? 'block' : 'none';
+      }
+      if (this.nextBtn) {
+        this.nextBtn.style.display = this.images.length > 1 ? 'block' : 'none';
+      }
+    }
+    
+    initTouchSupport() {
+      let startX = 0;
+      let startY = 0;
+      let endX = 0;
+      let endY = 0;
+      
+      this.modal?.addEventListener('touchstart', (e) => {
+        startX = e.touches[0].clientX;
+        startY = e.touches[0].clientY;
+      }, { passive: true });
+      
+      this.modal?.addEventListener('touchend', (e) => {
+        endX = e.changedTouches[0].clientX;
+        endY = e.changedTouches[0].clientY;
+        
+        const diffX = startX - endX;
+        const diffY = startY - endY;
+        
+        // Minimum swipe distance
+        if (Math.abs(diffX) > 50 && Math.abs(diffY) < 100) {
+          if (diffX > 0) {
+            // Swipe left - next image
+            this.next();
+          } else {
+            // Swipe right - previous image
+            this.prev();
+          }
+        }
+      }, { passive: true });
+    }
+  }
+  
+  // Initialize lightbox when DOM is ready
+  document.addEventListener('DOMContentLoaded', () => {
+    new ImageLightbox();
+  });
+</script>
+
+<style>
+  /* Lightbox Container */
+  .lightbox-container {
+    display: inline-block;
+  }
+  
+  .lightbox-trigger {
+    cursor: pointer;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+    border-radius: var(--radius-sm);
+  }
+  
+  .lightbox-trigger:hover {
+    transform: scale(1.02);
+    opacity: 0.9;
+  }
+  
+  .lightbox-trigger:focus {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+  }
+  
+  /* Lightbox Modal */
+  .lightbox-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .lightbox-modal.active {
+    opacity: 1;
+    visibility: visible;
+  }
+  
+  .lightbox-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    backdrop-filter: blur(4px);
+  }
+  
+  .lightbox-content {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-lg);
+  }
+  
+  /* Close Button */
+  .lightbox-close {
+    position: absolute;
+    top: var(--space-lg);
+    right: var(--space-lg);
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: white;
+    transition: all 0.2s ease;
+    z-index: 1000;
+  }
+  
+  .lightbox-close:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.1);
+  }
+  
+  .lightbox-close:focus {
+    outline: 2px solid white;
+    outline-offset: 2px;
+  }
+  
+  /* Navigation Buttons */
+  .lightbox-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-radius: 50%;
+    width: 56px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: white;
+    transition: all 0.2s ease;
+    z-index: 1000;
+  }
+  
+  .lightbox-nav:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-50%) scale(1.1);
+  }
+  
+  .lightbox-nav:focus {
+    outline: 2px solid white;
+    outline-offset: 2px;
+  }
+  
+  .lightbox-prev {
+    left: var(--space-lg);
+  }
+  
+  .lightbox-next {
+    right: var(--space-lg);
+  }
+  
+  /* Image Container */
+  .lightbox-image-container {
+    max-width: 90%;
+    max-height: 90%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .lightbox-image {
+    max-width: 100%;
+    max-height: 80vh;
+    object-fit: contain;
+    border-radius: var(--radius-md);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    animation: lightboxFadeIn 0.3s ease-out;
+  }
+  
+  @keyframes lightboxFadeIn {
+    from {
+      opacity: 0;
+      transform: scale(0.9);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  
+  .lightbox-caption {
+    margin-top: var(--space-md);
+    color: white;
+    text-align: center;
+    font-size: 1rem;
+    line-height: 1.5;
+    max-width: 600px;
+  }
+  
+  /* Counter */
+  .lightbox-counter {
+    position: absolute;
+    bottom: var(--space-lg);
+    left: 50%;
+    transform: translateX(-50%);
+    color: white;
+    font-size: 0.9rem;
+    background: rgba(0, 0, 0, 0.5);
+    padding: var(--space-xs) var(--space-sm);
+    border-radius: var(--radius-sm);
+  }
+  
+  /* Body scroll prevention */
+  body.lightbox-open {
+    overflow: hidden;
+  }
+  
+  /* Mobile optimizations */
+  @media (max-width: 768px) {
+    .lightbox-content {
+      padding: var(--space-md);
+    }
+    
+    .lightbox-close {
+      top: var(--space-md);
+      right: var(--space-md);
+      width: 40px;
+      height: 40px;
+    }
+    
+    .lightbox-nav {
+      width: 48px;
+      height: 48px;
+    }
+    
+    .lightbox-prev {
+      left: var(--space-sm);
+    }
+    
+    .lightbox-next {
+      right: var(--space-sm);
+    }
+    
+    .lightbox-image {
+      max-height: 70vh;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .lightbox-nav {
+      display: none;
+    }
+    
+    .lightbox-counter {
+      display: none;
+    }
+  }
+</style>

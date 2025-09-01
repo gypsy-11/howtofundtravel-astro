@@ -1,0 +1,33 @@
+{
+  "name": "astro-site",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "optimize-images": "node scripts/optimize-images.js",
+    "cleanup-images": "node scripts/cleanup-images.js",
+    "optimize-css": "node scripts/optimize-css.js",
+    "optimize-js": "node scripts/optimize-bundle.js",
+    "optimize-all": "node scripts/optimize-all.js",
+    "analyze-bundle": "astro build && npx vite-bundle-analyzer dist/_astro/",
+    "build:analyze": "npm run build && npm run analyze-bundle"
+  },
+  "dependencies": {
+    "@astrojs/mdx": "^4.3.4",
+    "@astrojs/node": "^9.4.2",
+    "@astrojs/vercel": "^8.0.4",
+    "astro": "^5.13.2",
+    "autoprefixer": "^10.4.21",
+    "cssnano": "^7.1.1",
+    "sharp": "^0.34.3",
+    "terser": "^5.43.1"
+  },
+  "devDependencies": {
+    "@mailerlite/mailerlite-nodejs": "^1.4.1",
+    "node-fetch": "^2.7.0"
+  }
+}

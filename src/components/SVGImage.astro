@@ -1,0 +1,52 @@
+---
+// SVG Image Component - For SVG files that don't need Astro's Image optimization
+// Updated to use OptimizedImage component for better performance
+import OptimizedImage from './OptimizedImage.astro';
+
+export interface Props {
+  src: string;
+  alt: string;
+  width?: number;
+  height?: number;
+  class?: string;
+  loading?: 'lazy' | 'eager';
+  decoding?: 'async' | 'sync' | 'auto';
+}
+
+const {
+  src,
+  alt,
+  width,
+  height,
+  class: className = "",
+  loading = 'eager', // SVGs are small and should load eagerly
+  decoding = 'async'
+} = Astro.props;
+---
+
+<!-- Use OptimizedImage component for better performance -->
+<OptimizedImage
+  src={src}
+  alt={alt}
+  width={width}
+  height={height}
+  class={className}
+  loading={loading}
+  decoding={decoding}
+  priority={loading === 'eager'} // Set priority for eager loading
+/>
+
+<style>
+  /* SVG-specific styles */
+  img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+  
+  /* Ensure SVGs scale properly */
+  img[src*=".svg"] {
+    width: 100%;
+    height: auto;
+  }
+</style>

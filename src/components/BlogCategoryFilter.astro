@@ -1,0 +1,253 @@
+---
+// Props for the component
+interface Props {
+  currentCategory?: string;
+  showAllButton?: boolean;
+}
+
+const { currentCategory, showAllButton = true } = Astro.props;
+---
+
+<section class="blog-categories" aria-label="Blog Categories">
+  <div class="container">
+    <div class="category-filters">
+      {showAllButton && (
+        <button class="category-btn" data-category="all" data-active={!currentCategory || currentCategory === 'all'}>
+          All Posts
+        </button>
+      )}
+      <button class="category-btn" data-category="remote-work" data-active={currentCategory === 'remote-work'}>
+        Remote Work
+      </button>
+      <button class="category-btn" data-category="online-business" data-active={currentCategory === 'online-business'}>
+        Online Business
+      </button>
+      <button class="category-btn" data-category="investing" data-active={currentCategory === 'investing'}>
+        Investing
+      </button>
+      <button class="category-btn" data-category="mindset" data-active={currentCategory === 'mindset'}>
+        Mindset
+      </button>
+      <button class="category-btn" data-category="affiliate-marketing" data-active={currentCategory === 'affiliate-marketing'}>
+        Affiliate Marketing
+      </button>
+      <button class="category-btn" data-category="ai-tools" data-active={currentCategory === 'ai-tools'}>
+        AI Tools
+      </button>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Blog Categories Section */
+  .blog-categories {
+    background: #f8f9fa;
+    border-bottom: 1px solid #e9ecef;
+    padding: 1rem 0;
+    position: sticky;
+    top: 0; /* Will be adjusted by JavaScript */
+    z-index: 100;
+    backdrop-filter: blur(10px);
+    background: rgba(248, 249, 250, 0.95);
+    transition: top 0.3s ease;
+  }
+
+  .category-filters {
+    display: flex;
+    justify-content: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .category-btn {
+    background: white;
+    border: 2px solid #e9ecef;
+    border-radius: 25px;
+    padding: 0.5rem 1.25rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #6c757d;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    display: inline-block;
+    white-space: nowrap;
+  }
+
+  .category-btn:hover {
+    background: #f0f0f0;
+    border-color: #d0d0d0;
+    transform: translateY(-1px);
+  }
+
+  .category-btn[data-active="true"] {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+    color: white;
+  }
+
+  /* Responsive design */
+  @media (max-width: 768px) {
+    .category-filters {
+      gap: 0.5rem;
+    }
+    
+    .category-btn {
+      padding: 0.4rem 1rem;
+      font-size: 0.8rem;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const categoryButtons = document.querySelectorAll('.category-btn');
+    const blogCategories = document.querySelector('.blog-categories');
+    const header = document.querySelector('.site-header');
+    
+    // Function to adjust category filter position based on header visibility
+    function adjustCategoryFilterPosition() {
+      if (!blogCategories || !header) return;
+      
+      const isHeaderVisible = header.classList.contains('header-visible');
+      const headerHeight = isHeaderVisible ? header.offsetHeight : 0;
+      
+      // Set the top position to account for header height
+      blogCategories.style.top = `${headerHeight}px`;
+    }
+    
+    // Initial position adjustment
+    adjustCategoryFilterPosition();
+    
+    // Listen for header visibility changes
+    const observer = new MutationObserver(function(mutations) {
+      mutations.forEach(function(mutation) {
+        if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+          adjustCategoryFilterPosition();
+        }
+      });
+    });
+    
+    if (header) {
+      observer.observe(header, {
+        attributes: true,
+        attributeFilter: ['class']
+      });
+    }
+    
+    // Also listen for scroll events to catch any missed header state changes
+    let lastScrollTop = 0;
+    window.addEventListener('scroll', function() {
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      
+      // Only adjust on desktop and when scroll direction changes significantly
+      if (window.innerWidth > 768 && Math.abs(scrollTop - lastScrollTop) > 10) {
+        adjustCategoryFilterPosition();
+        lastScrollTop = scrollTop;
+      }
+    });
+    
+    // Add click event to each category button
+    categoryButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        const selectedCategory = this.getAttribute('data-category');
+        
+        // If we're on a blog post page, navigate to the blog index with the category filter
+        if (window.location.pathname.includes('/blog/') && !window.location.pathname.endsWith('/blog')) {
+          // Navigate to blog index with category parameter
+          window.location.href = `/blog?category=${selectedCategory}`;
+          return;
+        }
+        
+        // If we're on the blog index page, filter the content
+        if (window.location.pathname === '/blog' || window.location.pathname === '/blog/') {
+          // Remove active class from all buttons
+          categoryButtons.forEach(btn => {
+            btn.classList.remove('active');
+            btn.setAttribute('data-active', 'false');
+          });
+          
+          // Add active class to clicked button
+          this.classList.add('active');
+          this.setAttribute('data-active', 'true');
+          
+          // Filter blog cards
+          const blogCards = document.querySelectorAll('.blog-card');
+          const featuredPosts = document.querySelectorAll('.featured-post-card');
+          
+          // Filter blog cards
+          blogCards.forEach(card => {
+            if (selectedCategory === 'all') {
+              card.style.display = 'block';
+            } else {
+              const cardCategory = card.getAttribute('data-category');
+              if (cardCategory === selectedCategory) {
+                card.style.display = 'block';
+              } else {
+                card.style.display = 'none';
+              }
+            }
+          });
+          
+          // Filter featured posts
+          featuredPosts.forEach(post => {
+            if (selectedCategory === 'all') {
+              post.style.display = 'block';
+            } else {
+              const postCategory = post.getAttribute('data-category');
+              if (postCategory === selectedCategory) {
+                post.style.display = 'block';
+              } else {
+                post.style.display = 'none';
+              }
+            }
+          });
+          
+          // Update section visibility
+          updateSectionVisibility(selectedCategory);
+        }
+      });
+    });
+    
+    // Function to show/hide sections based on category
+    function updateSectionVisibility(selectedCategory) {
+      const featuredSection = document.querySelector('.featured-posts');
+      const blogSection = document.querySelector('.blog-content');
+      
+      if (!featuredSection || !blogSection) return;
+      
+      if (selectedCategory === 'all') {
+        featuredSection.style.display = 'block';
+        blogSection.style.display = 'block';
+      } else {
+        const visibleFeaturedPosts = Array.from(document.querySelectorAll('.featured-post-card')).filter(post => 
+          post.style.display !== 'none' && post.getAttribute('data-category') === selectedCategory
+        );
+        
+        const visibleBlogCards = Array.from(document.querySelectorAll('.blog-card')).filter(card => 
+          card.style.display !== 'none' && card.getAttribute('data-category') === selectedCategory
+        );
+        
+        featuredSection.style.display = visibleFeaturedPosts.length > 0 ? 'block' : 'none';
+        blogSection.style.display = visibleBlogCards.length > 0 ? 'block' : 'none';
+      }
+    }
+    
+    // Set initial active state based on URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const categoryParam = urlParams.get('category');
+    
+    if (categoryParam) {
+      const activeButton = document.querySelector(`[data-category="${categoryParam}"]`);
+      if (activeButton) {
+        categoryButtons.forEach(btn => {
+          btn.classList.remove('active');
+          btn.setAttribute('data-active', 'false');
+        });
+        activeButton.classList.add('active');
+        activeButton.setAttribute('data-active', 'true');
+      }
+    }
+  });
+</script>

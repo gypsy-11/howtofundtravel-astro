@@ -1,0 +1,309 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+import VisaGuideFullWidth from '../components/VisaGuideFullWidth.astro';
+---
+
+<BaseLayout 
+  title="About Me | How to Fund Travel"
+  description="Meet Melissa, founder of How to Fund Travel. Learn about her journey from dreaming of location independence to living it with her family."
+  image="/images/optimized/melissa-profile-how-to-fund-travel.webp"
+  canonical="https://howtofund.travel/about"
+>
+  <!-- Hero Section -->
+  <Hero
+    badgeIcon="👋"
+    badgeText="Meet Melissa"
+    title="About "
+    highlightText="Me"
+    subtitle="From dreaming of location independence to living it with my family. Here's my story of taking the leap and making it work."
+  />
+
+  <!-- About Story Section -->
+  <section class="story-section" aria-labelledby="about-story-heading">
+    <div class="container">
+      <div class="section-intro">
+        <h2 id="about-story-heading">My Journey to Location Independence</h2>
+        <div class="divider"></div>
+      </div>
+      
+      <div class="story-content">
+        <div class="story-image">
+          <img src="/images/optimized/melissa-profile-how-to-fund-travel.webp" alt="Melissa, founder of How to Fund Travel" width="400" height="500" loading="lazy">
+        </div>
+        <div class="story-text">
+          <h3>Hi, I'm Melissa</h3>
+          
+          <p>For years, I dreamed of a life filled with travel and freedom. I envisioned our family living location-independently, supported by a fully remote income. After years of seeking the perfect formula through courses and mentors, the key turned out to be a leap of faith.</p>
+          
+          <p>In 2019, with very little savings or stable online income, we booked one-way tickets and embraced the unknown. This belief in creating our own path, along with some unexpected twists, has led us to an incredible journey of travel, personal growth, and financial autonomy.</p>
+          
+          <p>I've created this blog to share our experiences since we set off in February 2020. Here, I document the various ways we've tried (and often failed) to fund our travels. Explore the strategies we discovered, and hopefully, you'll find something that resonates and works for you and your family.</p>
+          
+          <p>More recently, I've discovered how AI tools can transform productivity for busy people. As a full-time remote worker and mum of six, I understand the constant struggle of wanting to achieve more without burning out. Through strategic AI implementation and automation strategies, I've been able to help digital nomads and time-poor people achieve incredible results while maintaining work-life balance.</p>
+          
+          <div class="about-highlights">
+            <div class="highlight-item">
+              <span class="highlight-icon">🌍</span>
+              <div class="highlight-content">
+                <h4>5+ Years Traveling</h4>
+                <p>Living location-independently with my family</p>
+              </div>
+            </div>
+            <div class="highlight-item">
+              <span class="highlight-icon">👨‍👩‍👧‍👦</span>
+              <div class="highlight-content">
+                <h4>Family of Six</h4>
+                <p>Proving that family travel is not only possible but incredible</p>
+              </div>
+            </div>
+            <div class="highlight-item">
+              <span class="highlight-icon">💰</span>
+              <div class="highlight-content">
+                <h4>Multiple Income Streams</h4>
+                <p>Remote work, online business, and smart investments</p>
+              </div>
+            </div>
+            <div class="highlight-item">
+              <span class="highlight-icon">🤖</span>
+              <div class="highlight-content">
+                <h4>AI Productivity Expert</h4>
+                <p>Helping time-poor people achieve more with AI tools</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta-section" aria-labelledby="cta-heading">
+    <div class="container">
+      <div class="cta-content">
+        <div class="cta-text">
+          <h2 id="cta-heading">Ready to start your own journey?</h2>
+          <p class="cta-subtitle">Join thousands of families who are already living their travel dreams</p>
+          <a href="#newsletter" class="btn btn-primary btn-large">Get Your Free Visa Guide</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Mission Section -->
+  <section class="mission-section" aria-labelledby="mission-heading">
+    <div class="container">
+      <div class="section-intro">
+        <h2 id="mission-heading">Why I Share This Journey</h2>
+        <div class="divider"></div>
+      </div>
+      
+      <div class="mission-content">
+        <div class="mission-text">
+          <p>Because if you're looking for someone who's actually living the life you crave, you've come to the right place. My mission is to help families like yours ditch the status quo and design a life that fuels your soul.</p>
+          
+          <p>Here's the thing: fancy coaches with their picture-perfect lives might not resonate with you if your dream doesn't involve suburbia and keeping up with the Joneses. I believe in finding a mentor who aligns with your values and aspirations.</p>
+          
+          <p>This website is for rebels, dream seekers, and anyone who knows there's more to life than the ordinary. I'm here to guide you through the process of deconditioning, ditching old patterns, and embracing a life of wild, free adventure (families included).</p>
+        </div>
+        
+        <div class="testimonial-container">
+          <blockquote class="testimonial">
+            <p>"Melissa's practical advice helped us continue our dream of traveling by helping us turn our dreams of online income into reality. In only a couple of weeks I was able to achieve more than I had in the six months before!"</p>
+            <cite>— family of 6</cite>
+          </blockquote>
+          
+          <blockquote class="testimonial">
+            <p>"I never thought we could afford to travel continuously with our kids. The strategies from How to Fund Travel changed everything for us."</p>
+            <cite>— Mother of 3</cite>
+          </blockquote>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Visa Guide Section -->
+  <VisaGuideFullWidth />
+</BaseLayout>
+
+<style>
+  /* Lemon Tuesday font is now loaded from local file via main.css */
+
+  /* Hero highlight style - using standard green color */
+  .hero .highlight {
+    font-family: 'Lemon Tuesday', 'Shadows Into Light', cursive;
+    color: var(--primary-color);
+  }
+
+  .story-section {
+    padding: 4rem 0;
+  }
+
+  .section-intro {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .section-intro h2 {
+    color: #2A9D8F;
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .divider {
+    width: 60px;
+    height: 4px;
+    background: linear-gradient(135deg, #2A9D8F 0%, #264653 100%);
+    margin: 0 auto;
+    border-radius: 2px;
+  }
+
+  .story-content {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 3rem;
+    align-items: start;
+  }
+
+  .story-image img {
+    width: 100%;
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  }
+
+  .story-text h3 {
+    color: #2A9D8F;
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .story-text p {
+    margin-bottom: 1.5rem;
+    line-height: 1.8;
+    color: #495057;
+  }
+
+  .about-highlights {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+
+  .highlight-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1.5rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border-left: 4px solid #2A9D8F;
+  }
+
+  .highlight-icon {
+    font-size: 2rem;
+    flex-shrink: 0;
+  }
+
+  .highlight-content h4 {
+    color: #2A9D8F;
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+  }
+
+  .highlight-content p {
+    color: #666;
+    font-size: 0.9rem;
+    margin: 0;
+  }
+
+  /* CTA Section */
+  .cta-section {
+    background: linear-gradient(135deg, #2A9D8F 0%, #264653 100%);
+    color: white;
+    padding: 4rem 0;
+    text-align: center;
+  }
+
+  .cta-content h2 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .cta-subtitle {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+    opacity: 0.9;
+  }
+
+  /* Mission Section */
+  .mission-section {
+    padding: 4rem 0;
+    background: #f8f9fa;
+  }
+
+  .mission-content {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 3rem;
+    margin-top: 2rem;
+  }
+
+  .mission-text p {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    margin-bottom: 1.5rem;
+    color: #495057;
+  }
+
+  .testimonial-container {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .testimonial {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    border-left: 4px solid #2A9D8F;
+    margin: 0;
+  }
+
+  .testimonial p {
+    font-style: italic;
+    margin-bottom: 1rem;
+    color: #333;
+  }
+
+  .testimonial cite {
+    color: #2A9D8F;
+    font-weight: 600;
+  }
+
+
+
+  @media (max-width: 768px) {
+    .story-content {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+    
+    .section-intro h2 {
+      font-size: 2rem;
+    }
+    
+    .mission-content {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+    
+
+    
+    .about-highlights {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+

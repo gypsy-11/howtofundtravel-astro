@@ -1,0 +1,19 @@
+{
+  "public": true,
+  "cleanUrls": true,
+  "redirects": [
+    {
+      "source": "/:path*.html",
+      "destination": "/:path*",
+      "permanent": true
+    }
+  ],
+  "functions": {
+    "api/*.js": {
+      "runtime": "@vercel/node@5.0.0"
+    }
+  },
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "installCommand": "npm install"
+}

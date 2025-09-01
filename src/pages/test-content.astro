@@ -1,0 +1,25 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const posts = await getCollection('blog');
+---
+
+<BaseLayout title="Content Test">
+  <h1>Content Collection Test</h1>
+  
+  <h2>All Blog Posts:</h2>
+  <ul>
+    {posts.map((post) => (
+      <li>
+        <strong>{post.data.title}</strong> - {post.slug}
+        <br>
+        Published: {post.data.publishedDate.toLocaleDateString()}
+        <br>
+        Categories: {post.data.category.join(', ')}
+      </li>
+    ))}
+  </ul>
+  
+  <h2>Post Count: {posts.length}</h2>
+</BaseLayout>

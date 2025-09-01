@@ -1,0 +1,33 @@
+---
+// Simple Vibe Nomads Community Component
+export interface Props {
+  title?: string;
+  description?: string;
+  buttonText?: string;
+  buttonUrl?: string;
+}
+
+const { 
+  title = "Join the Vibe Nomads Community",
+  description = "Connect with like-minded digital nomads who are building online businesses to fund their travel lifestyle.",
+  buttonText = "Join Vibe Nomads Free",
+  buttonUrl = "https://vibenomads.org"
+} = Astro.props;
+---
+
+<div class="lead-magnet-container">
+  <h3>{title}</h3>
+  <p>{description}</p>
+  
+  <div class="lead-magnet-benefits" style="background-color: white; border-radius: 10px; padding: 20px; margin: 20px 0; max-width: 90%; margin-left: auto; margin-right: auto; text-align: left;">
+    <p>Learn AI strategies for building your online business</p>
+    <p>Get support from experienced digital nomads</p>
+    <p>Access exclusive resources and tutorials</p>
+    <p>Network with successful location-independent entrepreneurs</p>
+    <p>Stay updated on the latest tools and trends</p>
+  </div>
+  
+  <div class="lead-magnet-cta">
+    <a href={buttonUrl} class="btn btn-primary" target="_blank" rel="noopener noreferrer">{buttonText}</a>
+  </div>
+</div>

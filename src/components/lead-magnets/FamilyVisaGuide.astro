@@ -1,0 +1,25 @@
+---
+import LeadMagnetBase from './LeadMagnetBase.astro';
+
+export interface Props {
+  formId?: string;
+}
+
+const { formId } = Astro.props;
+---
+
+<LeadMagnetBase
+  title="Get Your Free Family Visa Research Guide"
+  description="The stress-free visa research cheat sheet for slow travel families. Never miss an important visa requirement again!"
+  buttonText="Download Free Guide"
+  apiEndpoint="/api/visa-guide-download"
+  redirectUrl="/thank-you-visa-guide"
+  formId={formId}
+>
+  <div slot="benefits" class="lead-magnet-benefits" style="background-color: white; border-radius: 10px; padding: 20px; margin: 20px 0; max-width: 90%; margin-left: auto; margin-right: auto; text-align: left;">
+    <p>✅ Step-by-step visa research checklist</p>
+    <p>✅ Country-specific visa requirements database</p>
+    <p>✅ Family-specific visa considerations</p>
+    <p>✅ Common visa pitfalls and how to avoid them</p>
+  </div>
+</LeadMagnetBase>

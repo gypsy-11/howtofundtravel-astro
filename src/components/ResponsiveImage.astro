@@ -1,0 +1,144 @@
+---
+import path from 'path';
+
+// Responsive Image Component with WebP optimization and fallbacks
+export interface Props {
+  src: string;
+  alt: string;
+  width?: number;
+  height?: number;
+  class?: string;
+  priority?: boolean;
+  sizes?: string;
+  quality?: number;
+  caption?: string;
+  lightbox?: boolean;
+}
+
+const {
+  src,
+  alt,
+  width,
+  height,
+  class: className = "",
+  priority = false,
+  sizes = "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw",
+  quality = 80,
+  caption,
+  lightbox = false
+} = Astro.props;
+
+// Generate optimized image paths
+const baseName = src.replace(/\.[^/.]+$/, ""); // Remove extension
+const optimizedSrc = src.replace('/images/', '/images/optimized/');
+// Fix case-sensitive extension replacement
+const optimizedSrcLower = optimizedSrc.replace(/\.[^/.]+$/, path.extname(src).toLowerCase());
+const webpSrc = optimizedSrcLower.replace(/\.[^/.]+$/, '.webp');
+
+// Generate responsive image sources
+const responsiveSizes = [
+  { width: 640, suffix: 'sm' },
+  { width: 750, suffix: 'md' },
+  { width: 828, suffix: 'lg' },
+  { width: 1080, suffix: 'xl' },
+  { width: 1200, suffix: '2xl' },
+  { width: 1920, suffix: '3xl' }
+];
+
+// Generate srcset strings - Fix the path generation
+const webpSrcset = responsiveSizes.map(size => 
+  `${webpSrc.replace('.webp', `-${size.suffix}.webp`)} ${size.width}w`
+).join(', ');
+
+const fallbackSrcset = responsiveSizes.map(size => 
+  `${optimizedSrcLower.replace(/\.[^/.]+$/, `-${size.suffix}${path.extname(src).toLowerCase()}`)} ${size.width}w`
+).join(', ');
+
+const loading = priority ? 'eager' : 'lazy';
+const fetchpriority = priority ? 'high' : 'auto';
+---
+
+<picture class={`responsive-image ${className}`}>
+  <!-- WebP format for modern browsers -->
+  <source
+    type="image/webp"
+    srcset={webpSrcset}
+    sizes={sizes}
+  />
+  
+  <!-- Fallback optimized original format -->
+  <source
+    srcset={fallbackSrcset}
+    sizes={sizes}
+  />
+  
+  <!-- Fallback for older browsers -->
+  <img
+    src={optimizedSrcLower}
+    alt={alt}
+    width={width}
+    height={height}
+    loading={loading}
+    decoding="async"
+    fetchpriority={fetchpriority}
+    style="width: 100%; height: auto; display: block;"
+  />
+</picture>
+
+{caption && (
+  <figcaption class="image-caption">{caption}</figcaption>
+)}
+
+{lightbox && (
+  <script>
+    // Add lightbox functionality if needed
+    // This will be handled by the ImageLightbox component
+  </script>
+)}
+
+<style>
+  .responsive-image {
+    display: block;
+    max-width: 100%;
+    height: auto;
+  }
+
+  .responsive-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+    /* Optimize image rendering */
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
+
+  /* Image caption */
+  .image-caption {
+    text-align: center;
+    font-size: 0.9rem;
+    color: var(--text-gray);
+    margin-top: 0.5rem;
+    font-style: italic;
+  }
+
+  /* Loading placeholder for lazy images */
+  .lazy-placeholder {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+  }
+
+  @keyframes loading {
+    0% {
+      background-position: 200% 0;
+    }
+    100% {
+      background-position: -200% 0;
+    }
+  }
+
+  /* Optimize image loading performance */
+  .responsive-image {
+    contain: layout style paint;
+  }
+</style>

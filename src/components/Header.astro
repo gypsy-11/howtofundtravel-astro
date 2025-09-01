@@ -1,0 +1,182 @@
+---
+// Get current path for active navigation highlighting
+const currentPath = Astro.url.pathname;
+---
+
+<header class="site-header header-visible">
+  <div class="container">
+    <nav class="main-nav" aria-label="Main Navigation">
+      <a href="/" class="logo" aria-label="How to Fund Travel Home">
+        <!-- TODO: Crop logo whitespace to improve sizing and appearance -->
+        <img src="/images/how-to-fund-travel-logo-transparent.svg" alt="How to Fund Travel Logo" width="450" height="96" loading="lazy">
+      </a>
+      
+      <button class="mobile-menu-toggle" aria-label="Toggle Menu" aria-expanded="false">
+        <span class="sr-only">Menu</span>
+        <span class="hamburger"></span>
+      </button>
+      
+      <ul class="nav-links">
+        <li><a href="/" class={currentPath === '/' ? 'active' : ''}>Home</a></li>
+        <li><a href="/blog/" class={currentPath.startsWith('/blog') ? 'active' : ''}>Blog</a></li>
+        <li><a href="/case-studies/" class={currentPath.startsWith('/case-studies') ? 'active' : ''}>Case Studies</a></li>
+        <li><a href="/about" class={currentPath === '/about' ? 'active' : ''}>About Me</a></li>
+      </ul>
+      
+      <div class="header-actions">
+        <a href="/book-a-call" class="btn btn-primary book-call-btn">Book a Call</a>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<!-- Mobile menu backdrop -->
+<div class="mobile-menu-backdrop" aria-hidden="true"></div>
+
+<script>
+  // Enhanced mobile menu functionality
+  document.addEventListener('DOMContentLoaded', function() {
+    const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
+    const navLinks = document.querySelector('.nav-links');
+    const backdrop = document.querySelector('.mobile-menu-backdrop');
+    const body = document.body;
+    
+    // Function to open mobile menu
+    function openMobileMenu() {
+      mobileMenuToggle?.setAttribute('aria-expanded', 'true');
+      navLinks?.classList.add('nav-open');
+      mobileMenuToggle?.classList.add('active');
+      backdrop?.classList.add('active');
+      body.classList.add('nav-open');
+      
+      // Focus management
+      const firstLink = navLinks?.querySelector('a');
+      firstLink?.focus();
+      
+      // Track mobile menu open
+      if (typeof trackMobileMenuToggle === 'function') {
+        trackMobileMenuToggle(true);
+      }
+    }
+    
+    // Function to close mobile menu
+    function closeMobileMenu() {
+      mobileMenuToggle?.setAttribute('aria-expanded', 'false');
+      navLinks?.classList.remove('nav-open');
+      mobileMenuToggle?.classList.remove('active');
+      backdrop?.classList.remove('active');
+      body.classList.remove('nav-open');
+      
+      // Return focus to toggle button
+      mobileMenuToggle?.focus();
+      
+      // Track mobile menu close
+      if (typeof trackMobileMenuToggle === 'function') {
+        trackMobileMenuToggle(false);
+      }
+    }
+    
+    // Toggle mobile menu
+    if (mobileMenuToggle && navLinks) {
+      mobileMenuToggle.addEventListener('click', function(e) {
+        e.preventDefault();
+        const isExpanded = this.getAttribute('aria-expanded') === 'true';
+        
+        if (isExpanded) {
+          closeMobileMenu();
+        } else {
+          openMobileMenu();
+        }
+      });
+    }
+    
+    // Close menu when clicking backdrop
+    backdrop?.addEventListener('click', closeMobileMenu);
+    
+    // Close menu on escape key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && navLinks?.classList.contains('nav-open')) {
+        closeMobileMenu();
+      }
+    });
+    
+    // Close menu when clicking on a link
+    navLinks?.addEventListener('click', function(e) {
+      if (e.target.tagName === 'A') {
+        // Small delay to allow for smooth transition
+        setTimeout(closeMobileMenu, 100);
+      }
+    });
+    
+    // Close menu on window resize (if switching to desktop)
+    window.addEventListener('resize', function() {
+      if (window.innerWidth > 768 && navLinks?.classList.contains('nav-open')) {
+        closeMobileMenu();
+      }
+    });
+    
+    // Header scroll behavior (desktop only)
+    let lastScrollTop = 0;
+    const header = document.querySelector('.site-header');
+    
+    window.addEventListener('scroll', function() {
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      
+      if (window.innerWidth > 768) { // Desktop only
+        if (scrollTop > lastScrollTop && scrollTop > 100) {
+          // Scrolling down
+          header?.classList.remove('header-visible');
+        } else {
+          // Scrolling up
+          header?.classList.add('header-visible');
+        }
+      }
+      
+      lastScrollTop = scrollTop;
+    });
+    
+    // Smooth scrolling for anchor links
+    const anchorLinks = document.querySelectorAll('a[href^="#"]');
+    
+    anchorLinks.forEach(link => {
+      link.addEventListener('click', function(e) {
+        const href = this.getAttribute('href');
+        
+        // Skip if it's just "#" or empty
+        if (href === '#' || href === '') return;
+        
+        const targetElement = document.querySelector(href);
+        
+        if (targetElement) {
+          e.preventDefault();
+          
+          // Close mobile menu if open
+          if (navLinks?.classList.contains('nav-open')) {
+            closeMobileMenu();
+          }
+          
+          // Calculate offset for fixed header
+          const headerHeight = header?.offsetHeight || 0;
+          const targetPosition = targetElement.offsetTop - headerHeight - 20; // 20px buffer
+          
+          // Smooth scroll to target
+          window.scrollTo({
+            top: targetPosition,
+            behavior: 'smooth'
+          });
+          
+          // Update URL hash without jumping
+          history.pushState(null, null, href);
+        }
+      });
+    });
+  });
+  
+
+
+
+  
+</script>
+
+<style>
+</style>

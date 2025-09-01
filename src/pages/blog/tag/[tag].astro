@@ -1,0 +1,411 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+
+// Get the tag from the URL params
+const { tag } = Astro.params;
+
+// Get all blog posts
+const posts = await getCollection('blog');
+
+// Filter posts by tag
+const taggedPosts = posts.filter(post => 
+  post.data.tags.some(postTag => 
+    postTag.toLowerCase().replace(/\s+/g, '-') === tag
+  )
+);
+
+// Get the actual tag name for display
+const actualTagName = taggedPosts.length > 0 
+  ? taggedPosts[0].data.tags.find(postTag => 
+      postTag.toLowerCase().replace(/\s+/g, '-') === tag
+    )
+  : tag;
+
+// Redirect to 404 if no posts found for this tag
+if (taggedPosts.length === 0) {
+  return Astro.redirect('/404');
+}
+
+// Sort posts by date (newest first)
+const sortedPosts = taggedPosts.sort((a, b) => 
+  b.data.publishedDate.valueOf() - a.data.publishedDate.valueOf()
+);
+---
+
+<BaseLayout 
+  title={`Posts tagged "${actualTagName}" | How to Fund Travel`}
+  description={`Browse all blog posts tagged with "${actualTagName}" - travel funding tips, remote work strategies, and digital nomad advice.`}
+  canonical={`https://howtofund.travel/blog/tag/${tag}`}
+>
+  <!-- Tag Hero Section -->
+  <section class="tag-hero">
+    <div class="container">
+      <div class="tag-hero-content">
+        <div class="tag-badge">
+          <span class="tag-icon">🏷️</span>
+          Tag
+        </div>
+        <h1>Posts tagged "<span class="highlight">{actualTagName}</span>"</h1>
+        <p class="tag-description">
+          Discover {sortedPosts.length} article{sortedPosts.length !== 1 ? 's' : ''} about {actualTagName.toLowerCase()} to help you fund your travel dreams.
+        </p>
+        <div class="tag-meta">
+          <span class="post-count">{sortedPosts.length} article{sortedPosts.length !== 1 ? 's' : ''}</span>
+          <a href="/blog/tags" class="view-all-tags">View all tags</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tagged Posts Section -->
+  <section class="tagged-posts-section">
+    <div class="container">
+      <div class="posts-grid">
+        {sortedPosts.map((post) => (
+          <article class="post-card" data-category={post.data.category[0].toLowerCase().replace(/\s+/g, '-')}>
+            {post.data.image && (
+              <div class="post-card-image">
+                <a href={`/blog/${post.slug}`} class="post-card-image-link">
+                  <img src={post.data.image} alt={post.data.title} width="400" height="250" loading="lazy">
+                </a>
+              </div>
+            )}
+            <div class="post-card-content">
+              <div class="post-card-meta">
+                <time datetime={post.data.publishedDate.toISOString()}>
+                  {post.data.publishedDate.toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                  })}
+                </time>
+                <span class="post-category">{post.data.category[0]}</span>
+              </div>
+              <h2 class="post-card-title">
+                <a href={`/blog/${post.slug}`}>{post.data.title}</a>
+              </h2>
+              <p class="post-card-excerpt">{post.data.description}</p>
+              <div class="post-card-tags">
+                {post.data.tags.slice(0, 3).map((tag) => (
+                  <a href={`/blog/tag/${tag.toLowerCase().replace(/\s+/g, '-')}`} class="post-tag">
+                    {tag}
+                  </a>
+                ))}
+                {post.data.tags.length > 3 && (
+                  <span class="more-tags">+{post.data.tags.length - 3} more</span>
+                )}
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Related Tags Section -->
+  <section class="related-tags-section">
+    <div class="container">
+      <div class="related-tags-content">
+        <h2>Explore Related Tags</h2>
+        <div class="related-tags-grid">
+          {(() => {
+            // Get all unique tags from all posts
+            const allTags = new Set();
+            posts.forEach(post => {
+              post.data.tags.forEach(tag => {
+                allTags.add(tag);
+              });
+            });
+            
+            // Get tags that appear with the current tag
+            const relatedTags = new Set();
+            taggedPosts.forEach(post => {
+              post.data.tags.forEach(tag => {
+                if (tag.toLowerCase().replace(/\s+/g, '-') !== tag) {
+                  relatedTags.add(tag);
+                }
+              });
+            });
+            
+            // Convert to array and sort by frequency
+            const tagFrequency = {};
+            posts.forEach(post => {
+              post.data.tags.forEach(tag => {
+                if (tag.toLowerCase().replace(/\s+/g, '-') !== tag) {
+                  tagFrequency[tag] = (tagFrequency[tag] || 0) + 1;
+                }
+              });
+            });
+            
+            const sortedRelatedTags = Array.from(relatedTags)
+              .sort((a, b) => tagFrequency[b] - tagFrequency[a])
+              .slice(0, 8);
+            
+            return sortedRelatedTags.map(tag => (
+              <a href={`/blog/tag/${tag.toLowerCase().replace(/\s+/g, '-')}`} class="related-tag">
+                {tag}
+                <span class="tag-count">({tagFrequency[tag]})</span>
+              </a>
+            ));
+          })()}
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* Tag Hero Styles */
+  .tag-hero {
+    background: linear-gradient(135deg, var(--primary-light) 0%, var(--secondary-light) 100%);
+    padding: var(--space-xxl) 0;
+    text-align: center;
+  }
+  
+  .tag-hero-content {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  .tag-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    background: rgba(255, 255, 255, 0.2);
+    color: var(--dark);
+    padding: var(--space-xs) var(--space-md);
+    border-radius: var(--radius-lg);
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-bottom: var(--space-lg);
+  }
+  
+  .tag-hero h1 {
+    font-size: 2.5rem;
+    color: var(--dark);
+    margin-bottom: var(--space-md);
+    line-height: 1.2;
+  }
+  
+  .tag-description {
+    font-size: 1.2rem;
+    color: var(--dark);
+    margin-bottom: var(--space-lg);
+    line-height: 1.6;
+  }
+  
+  .tag-meta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-lg);
+  }
+  
+  .post-count {
+    background: rgba(255, 255, 255, 0.3);
+    padding: var(--space-xs) var(--space-md);
+    border-radius: var(--radius-md);
+    font-weight: 500;
+    color: var(--dark);
+  }
+  
+  .view-all-tags {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s ease;
+  }
+  
+  .view-all-tags:hover {
+    color: var(--dark);
+  }
+  
+  /* Tagged Posts Section */
+  .tagged-posts-section {
+    padding: var(--space-xxl) 0;
+  }
+  
+  .posts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: var(--space-xl);
+  }
+  
+  .post-card {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    transition: all 0.3s ease;
+  }
+  
+  .post-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+  }
+  
+  .post-card-image {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .post-card-image img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+  
+  .post-card:hover .post-card-image img {
+    transform: scale(1.05);
+  }
+  
+  .post-card-content {
+    padding: var(--space-lg);
+  }
+  
+  .post-card-meta {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    margin-bottom: var(--space-sm);
+    font-size: 0.9rem;
+    color: var(--text-gray);
+  }
+  
+  .post-category {
+    background: var(--primary-light);
+    color: var(--primary-color);
+    padding: var(--space-xs) var(--space-sm);
+    border-radius: var(--radius-sm);
+    font-weight: 500;
+  }
+  
+  .post-card-title {
+    font-size: 1.3rem;
+    margin-bottom: var(--space-sm);
+    line-height: 1.4;
+  }
+  
+  .post-card-title a {
+    color: var(--dark);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+  
+  .post-card-title a:hover {
+    color: var(--primary-color);
+  }
+  
+  .post-card-excerpt {
+    color: var(--text-gray);
+    line-height: 1.6;
+    margin-bottom: var(--space-md);
+  }
+  
+  .post-card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+    align-items: center;
+  }
+  
+  .post-tag {
+    background: var(--light-gray);
+    color: var(--text-gray);
+    padding: var(--space-xs) var(--space-sm);
+    border-radius: var(--radius-sm);
+    font-size: 0.8rem;
+    text-decoration: none;
+    transition: all 0.2s ease;
+  }
+  
+  .post-tag:hover {
+    background: var(--primary-color);
+    color: var(--white);
+  }
+  
+  .more-tags {
+    font-size: 0.8rem;
+    color: var(--text-gray);
+    font-style: italic;
+  }
+  
+  /* Related Tags Section */
+  .related-tags-section {
+    background: var(--light-gray);
+    padding: var(--space-xxl) 0;
+  }
+  
+  .related-tags-content {
+    text-align: center;
+  }
+  
+  .related-tags-content h2 {
+    font-size: 2rem;
+    color: var(--dark);
+    margin-bottom: var(--space-xl);
+  }
+  
+  .related-tags-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-md);
+    justify-content: center;
+  }
+  
+  .related-tag {
+    background: var(--white);
+    color: var(--dark);
+    padding: var(--space-sm) var(--space-md);
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    box-shadow: var(--shadow-sm);
+  }
+  
+  .related-tag:hover {
+    background: var(--primary-color);
+    color: var(--white);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
+  
+  .tag-count {
+    font-size: 0.8rem;
+    opacity: 0.7;
+    margin-left: var(--space-xs);
+  }
+  
+  /* Mobile Responsive */
+  @media (max-width: 768px) {
+    .tag-hero h1 {
+      font-size: 2rem;
+    }
+    
+    .tag-description {
+      font-size: 1.1rem;
+    }
+    
+    .posts-grid {
+      grid-template-columns: 1fr;
+      gap: var(--space-lg);
+    }
+    
+    .tag-meta {
+      flex-direction: column;
+      gap: var(--space-md);
+    }
+    
+    .related-tags-grid {
+      gap: var(--space-sm);
+    }
+    
+    .related-tag {
+      font-size: 0.9rem;
+      padding: var(--space-xs) var(--space-sm);
+    }
+  }
+</style>

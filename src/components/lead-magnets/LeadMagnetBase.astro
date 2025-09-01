@@ -1,0 +1,278 @@
+---
+// Base Lead Magnet Component
+export interface Props {
+  title: string;
+  description: string;
+  buttonText: string;
+  apiEndpoint: string;
+  redirectUrl?: string;
+  formId?: string;
+}
+
+const { 
+  title, 
+  description, 
+  buttonText = "Get Free Access", 
+  apiEndpoint,
+  redirectUrl,
+  formId = "lead-magnet-form-" + Math.random().toString(36).substring(2, 9)
+} = Astro.props;
+---
+
+<div class="lead-magnet-container">
+  <h3>{title}</h3>
+  <p>{description}</p>
+  
+  <slot name="benefits" />
+  
+  <form id={formId} class="lead-magnet-form" data-api-endpoint={apiEndpoint} data-redirect-url={redirectUrl}>
+    <div class="form-group">
+      <input type="email" id={`${formId}-email`} name="email" class="form-input" placeholder="Your email address" required>
+      <!-- Honeypot field for spam protection -->
+      <input type="text" name="website" style="position: absolute; left: -9999px;" tabindex="-1" autocomplete="off">
+      <button type="submit" id={`${formId}-submit`} class="btn btn-primary">
+        <span class="btn-text">{buttonText}</span>
+        <span class="loading-spinner" style="display: none;"></span>
+      </button>
+    </div>
+    <div class="form-message" style="display: none;"></div>
+    <div class="form-privacy">
+      <small>🔒 Your email is safe. Unsubscribe anytime.</small>
+    </div>
+  </form>
+</div>
+
+<script define:vars={{ formId, apiEndpoint, redirectUrl }}>
+  // Enhanced Lead Magnet Form Handler with improved validation
+  document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById(formId);
+    
+    if (form) {
+      // Enhanced email validation function
+      function validateEmail(email) {
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        return emailRegex.test(email);
+      }
+      
+      // Enhanced form validation
+      function validateForm(email) {
+        const errors = [];
+        
+        // Check if email is empty
+        if (!email || email.trim() === '') {
+          errors.push('Email address is required');
+          return errors;
+        }
+        
+        // Check email length
+        if (email.length > 254) {
+          errors.push('Email address is too long');
+        }
+        
+        // Check email format
+        if (!validateEmail(email)) {
+          errors.push('Please enter a valid email address');
+        }
+        
+        // Check for common spam patterns
+        const spamPatterns = [
+          /test@/i,
+          /admin@/i,
+          /noreply@/i,
+          /no-reply@/i,
+          /mailer-daemon@/i
+        ];
+        
+        if (spamPatterns.some(pattern => pattern.test(email))) {
+          errors.push('Please use a valid personal email address');
+        }
+        
+        return errors;
+      }
+      
+      // Rate limiting - prevent multiple submissions
+      let isSubmitting = false;
+      const submitCooldown = 5000; // 5 seconds
+      
+      form.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        // Prevent multiple submissions
+        if (isSubmitting) {
+          return;
+        }
+        
+        const emailInput = document.getElementById(`${formId}-email`);
+        const submitBtn = document.getElementById(`${formId}-submit`);
+        const btnText = submitBtn.querySelector('.btn-text');
+        const btnLoading = submitBtn.querySelector('.loading-spinner');
+        const messageDiv = form.querySelector('.form-message');
+        const honeypotField = form.querySelector('input[name="website"]');
+        
+        // Check honeypot field (if filled, it's likely spam)
+        if (honeypotField.value.trim() !== '') {
+          console.log('Honeypot field filled - likely spam');
+          messageDiv.textContent = 'Thank you for your interest!';
+          messageDiv.className = 'form-message success';
+          messageDiv.style.display = 'block';
+          return;
+        }
+        
+        const email = emailInput.value.trim();
+        
+        // Enhanced client-side validation
+        const validationErrors = validateForm(email);
+        
+        if (validationErrors.length > 0) {
+          messageDiv.textContent = validationErrors[0]; // Show first error
+          messageDiv.className = 'form-message error';
+          messageDiv.style.display = 'block';
+          
+          // Add visual feedback to input
+          emailInput.classList.add('error');
+          emailInput.focus();
+          
+          // Remove error class after user starts typing
+          emailInput.addEventListener('input', function() {
+            emailInput.classList.remove('error');
+            messageDiv.style.display = 'none';
+          }, { once: true });
+          
+          return;
+        }
+        
+        // Set submitting state
+        isSubmitting = true;
+        
+        // Show loading state
+        btnText.textContent = 'Sending...';
+        btnLoading.style.display = 'inline-block';
+        submitBtn.disabled = true;
+        messageDiv.style.display = 'none';
+        emailInput.classList.remove('error');
+        
+        try {
+          const response = await fetch(apiEndpoint, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ 
+              email: email,
+              timestamp: new Date().toISOString(),
+              userAgent: navigator.userAgent
+            })
+          });
+          
+          const data = await response.json();
+          
+          if (response.ok && data.success) {
+            messageDiv.textContent = 'Perfect! Your free resource is on its way. Check your inbox!';
+            messageDiv.className = 'form-message success';
+            emailInput.value = ''; // Clear the form
+            
+            // Track successful lead magnet submission
+            if (typeof trackLeadMagnet === 'function') {
+              trackLeadMagnet(formId, 'success');
+            }
+            
+            // Redirect to thank you page if URL is provided
+            if (data.redirectUrl || redirectUrl) {
+              setTimeout(() => {
+                window.location.href = data.redirectUrl || redirectUrl;
+              }, 2000);
+            }
+          } else {
+            // Handle specific error cases
+            let errorMessage = 'Something went wrong. Please try again.';
+            
+            if (response.status === 429) {
+              errorMessage = 'Too many requests. Please wait a moment and try again.';
+            } else if (response.status === 400) {
+              errorMessage = data.message || 'Please check your email address and try again.';
+            } else if (response.status === 422) {
+              errorMessage = 'This email address is already subscribed.';
+            } else if (data.message) {
+              errorMessage = data.message;
+            }
+            
+            messageDiv.textContent = errorMessage;
+            messageDiv.className = 'form-message error';
+          }
+        } catch (error) {
+          console.error('Form submission error:', error);
+          
+          let errorMessage = 'Network error. Please check your connection and try again.';
+          
+          if (error.name === 'TypeError' && error.message.includes('fetch')) {
+            errorMessage = 'Unable to connect to server. Please try again later.';
+          }
+          
+          messageDiv.textContent = errorMessage;
+          messageDiv.className = 'form-message error';
+        }
+        
+        // Reset button and show message
+        btnText.textContent = buttonText;
+        btnLoading.style.display = 'none';
+        submitBtn.disabled = false;
+        messageDiv.style.display = 'block';
+        
+        // Reset submitting state after cooldown
+        setTimeout(() => {
+          isSubmitting = false;
+        }, submitCooldown);
+      });
+      
+      // Real-time validation feedback
+      emailInput.addEventListener('blur', function() {
+        const email = this.value.trim();
+        if (email && !validateEmail(email)) {
+          this.classList.add('error');
+        } else {
+          this.classList.remove('error');
+        }
+      });
+    }
+  });
+</script>
+
+<style>
+  .form-input.error {
+    border-color: #dc3545;
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+  }
+  
+  .form-message.error {
+    color: #dc3545;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    border-radius: 4px;
+    padding: 0.75rem;
+    margin-top: 0.5rem;
+  }
+  
+  .form-message.success {
+    color: #155724;
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+    border-radius: 4px;
+    padding: 0.75rem;
+    margin-top: 0.5rem;
+  }
+  
+  .loading-spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid #ffffff;
+    border-top: 2px solid transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-left: 8px;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+</style>

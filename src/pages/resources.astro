@@ -1,0 +1,80 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+---
+
+<BaseLayout 
+  title="Resources - Travel Funding Tools & Guides | How to Fund Travel"
+  description="Discover essential resources, tools, and guides to help you fund your travel dreams and achieve location independence."
+  canonical="https://howtofund.travel/resources"
+  type="website"
+>
+  <!-- Hero Section -->
+  <Hero
+    badgeIcon="📚"
+    badgeText="Essential Tools"
+    title="Resources for Your "
+    highlightText="Travel Journey"
+    subtitle="Essential tools, guides, and resources to help you fund your travel dreams and achieve location independence."
+  />
+
+  <!-- Content Section -->
+  <section class="content-section">
+    <div class="container">
+      <div class="content-placeholder">
+        <h2>Resources Coming Soon</h2>
+        <p>We're working on compiling the best resources, tools, and guides to help you on your journey to location independence.</p>
+        <p>Check back soon for:</p>
+        <ul>
+          <li>Recommended tools and software</li>
+          <li>Free guides and templates</li>
+          <li>Curated resource lists</li>
+          <li>Essential reading materials</li>
+        </ul>
+        <a href="/blog/" class="btn btn-primary">Explore Our Blog</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* Lemon Tuesday font is now loaded from local file via main.css */
+
+  .content-section {
+    padding: 4rem 0;
+  }
+
+  .content-placeholder {
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .content-placeholder h2 {
+    color: #2A9D8F;
+    margin-bottom: 1rem;
+  }
+
+  .content-placeholder p {
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+  }
+
+  .content-placeholder ul {
+    text-align: left;
+    max-width: 400px;
+    margin: 2rem auto;
+    color: #666;
+  }
+
+  .content-placeholder li {
+    margin-bottom: 0.5rem;
+  }
+
+  @media (max-width: 768px) {
+    .hero h1 {
+      font-size: 2rem;
+    }
+  }
+</style>

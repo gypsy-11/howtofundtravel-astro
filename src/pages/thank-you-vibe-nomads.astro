@@ -1,0 +1,116 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout 
+  title="Thank You for Joining Vibe Nomads | How to Fund Travel"
+  description="Thank you for joining the Vibe Nomads community. Your journey to location independence starts now!"
+>
+  <section class="thank-you-section">
+    <div class="container">
+      <div class="thank-you-content">
+        <h1>Welcome to Vibe Nomads!</h1>
+        <div class="success-icon">✓</div>
+        <p class="lead">You're officially part of our community of digital nomads.</p>
+        <p>Check your email for login details and next steps. If you don't see it, please check your spam folder.</p>
+        
+        <div class="next-steps">
+          <h2>What's Next?</h2>
+          <ul>
+            <li>Complete your community profile</li>
+            <li>Introduce yourself in the welcome thread</li>
+            <li>Explore our exclusive resources and tutorials</li>
+            <li>Connect with fellow digital nomads</li>
+          </ul>
+        </div>
+        
+        <div class="cta-container">
+          <a href="https://vibenomads.org" class="btn btn-primary">Go to Vibe Nomads</a>
+          <a href="/blog" class="btn btn-secondary">Explore More Resources</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .thank-you-section {
+    padding: 6rem 0;
+    text-align: center;
+  }
+  
+  .thank-you-content {
+    max-width: 700px;
+    margin: 0 auto;
+  }
+  
+  .success-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    color: white;
+    font-size: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 2rem auto;
+  }
+  
+  .lead {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: var(--primary-color);
+    font-weight: 500;
+  }
+  
+  .next-steps {
+    background: #f8f9fa;
+    padding: 2rem;
+    border-radius: 10px;
+    margin: 3rem 0;
+    text-align: left;
+  }
+  
+  .next-steps h2 {
+    margin-bottom: 1rem;
+    color: var(--primary-color);
+  }
+  
+  .next-steps ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .next-steps li {
+    padding: 0.5rem 0;
+    position: relative;
+    padding-left: 2rem;
+  }
+  
+  .next-steps li:before {
+    content: "✓";
+    color: var(--primary-color);
+    position: absolute;
+    left: 0;
+    font-weight: bold;
+  }
+  
+  .cta-container {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+  }
+  
+  @media (max-width: 768px) {
+    .thank-you-section {
+      padding: 4rem 0;
+    }
+    
+    .lead {
+      font-size: 1.3rem;
+    }
+  }
+</style>

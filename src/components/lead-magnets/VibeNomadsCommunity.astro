@@ -1,0 +1,26 @@
+1---
+import LeadMagnetBase from './LeadMagnetBase.astro';
+
+export interface Props {
+  formId?: string;
+}
+
+const { formId } = Astro.props;
+---
+
+<LeadMagnetBase
+  title="Join the Vibe Nomads Community"
+  description="Connect with like-minded digital nomads who are building online businesses to fund their travel lifestyle."
+  buttonText="Join Vibe Nomads Free"
+  apiEndpoint="/api/vibe-nomads-signup"
+  redirectUrl="/thank-you-vibe-nomads"
+  formId={formId}
+>
+   <div slot="benefits" class="lead-magnet-benefits" style="background-color: white; border-radius: 10px; padding: 20px; margin: 20px 0; max-width: 90%; margin-left: auto; margin-right: auto; text-align: left;">
+    <p>Learn AI strategies for building your online business</p>
+    <p>Get support from experienced digital nomads</p>
+    <p>Access exclusive resources and tutorials</p>
+    <p>Network with successful location-independent entrepreneurs</p>
+    <p>Stay updated on the latest tools and trends</p>
+  </div>
+</LeadMagnetBase>

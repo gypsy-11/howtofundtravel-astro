@@ -1,0 +1,95 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+---
+
+<BaseLayout 
+  title="Contact - Get in Touch | How to Fund Travel"
+  description="Get in touch with us for questions about funding travel, location independence, or working together."
+  canonical="https://howtofund.travel/contact"
+  type="website"
+>
+  <!-- Hero Section -->
+  <Hero
+    badgeIcon="💬"
+    badgeText="Get in Touch"
+    title="Let's "
+    highlightText="Connect"
+    subtitle="Get in touch with us for questions about funding travel, location independence, or working together."
+  />
+
+  <!-- Content Section -->
+  <section class="content-section">
+    <div class="container">
+      <div class="content-placeholder">
+        <h2>Contact Information Coming Soon</h2>
+        <p>We're setting up our contact system to better serve you.</p>
+        <p>In the meantime, you can:</p>
+        <ul>
+          <li>Explore our blog for answers to common questions</li>
+          <li>Book a call for personalized guidance</li>
+          <li>Join our community for support</li>
+        </ul>
+        <div class="contact-actions">
+          <a href="/blog/" class="btn btn-primary">Read Our Blog</a>
+          <a href="/book-a-call" class="btn btn-secondary">Book a Call</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* Lemon Tuesday font is now loaded from local file via main.css */
+
+  .content-section {
+    padding: 4rem 0;
+  }
+
+  .content-placeholder {
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .content-placeholder h2 {
+    color: #2A9D8F;
+    margin-bottom: 1rem;
+  }
+
+  .content-placeholder p {
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+  }
+
+  .content-placeholder ul {
+    text-align: left;
+    max-width: 400px;
+    margin: 2rem auto;
+    color: #666;
+  }
+
+  .content-placeholder li {
+    margin-bottom: 0.5rem;
+  }
+
+  .contact-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 2rem;
+  }
+
+  @media (max-width: 768px) {
+    .hero h1 {
+      font-size: 2rem;
+    }
+    
+    .contact-actions {
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+</style>

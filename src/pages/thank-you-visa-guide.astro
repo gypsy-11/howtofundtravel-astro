@@ -1,0 +1,200 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout 
+  title="Thank You! Download Your Visa Guide - How to Fund Travel"
+  description="Thank you for downloading your free Family Visa Research Guide. Get instant access to stress-free visa research for slow travel families."
+>
+  <section class="thank-you-section">
+    <div class="container">
+      <div class="thank-you-content">
+        <div class="success-icon">
+          <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="12" cy="12" r="10" stroke="#10B981" stroke-width="2"/>
+            <path d="M9 12l2 2 4-4" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        
+        <h1>Thank You! 🎉</h1>
+        <p>Your Family Visa Research Guide is ready! Check your email for additional visa research tips and resources.</p>
+        
+        <div class="download-button-container">
+          <button id="downloadGuide" class="btn btn-primary btn-large">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 8px;">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <polyline points="7,10 12,15 17,10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <line x1="12" y1="15" x2="12" y2="3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Download Your Visa Guide
+          </button>
+        </div>
+        
+        <div class="instructions">
+          <h4>How to use your visa guide:</h4>
+          <ol>
+            <li>Click download button above</li>
+            <li>The PDF will download</li>
+            <li>Navigate to your downloads folder</li>
+            <li>Enjoy</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .thank-you-section {
+    padding: 4rem 0;
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+  }
+  
+  .thank-you-content {
+    max-width: 600px;
+    margin: 0 auto;
+    text-align: center;
+    background: white;
+    padding: 3rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  }
+  
+  .success-icon {
+    margin-bottom: 2rem;
+  }
+  
+  .success-icon svg {
+    width: 64px;
+    height: 64px;
+    color: var(--success, #10B981);
+  }
+  
+  .thank-you-content h1 {
+    color: var(--primary-color);
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
+  
+  .thank-you-content p {
+    color: var(--medium, #6c757d);
+    font-size: 1.125rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+  }
+  
+  .instructions {
+    background: var(--light, #f8f9fa);
+    border-radius: 8px;
+    padding: 1.5rem;
+    text-align: left;
+    margin-top: 2rem;
+  }
+  
+  .instructions h4 {
+    color: var(--dark, #343a40);
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+  }
+  
+  .instructions ol {
+    color: var(--medium, #6c757d);
+    font-size: 1rem;
+    line-height: 1.6;
+    padding-left: 1.5rem;
+  }
+  
+  .instructions li {
+    margin-bottom: 0.5rem;
+  }
+  
+  .download-button-container {
+    margin-bottom: 3rem;
+  }
+  
+  .btn-large {
+    padding: 1.25rem 2.5rem;
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
+  
+  .btn-success {
+    background: var(--success, #10B981);
+    color: white;
+  }
+  
+  @media (max-width: 768px) {
+    .thank-you-content {
+      padding: 2rem 1.5rem;
+      margin: 0 1rem;
+    }
+    
+    .thank-you-content h1 {
+      font-size: 2rem;
+    }
+  }
+</style>
+
+<script>
+  document.getElementById('downloadGuide').addEventListener('click', function() {
+    const button = this;
+    const originalText = button.innerHTML;
+    
+    // Show loading state
+    button.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 8px;"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/><path d="M12 6v6l4 2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Downloading...';
+    button.disabled = true;
+    
+    // Fetch the PDF file from the Astro site location
+    fetch('/lead-magnets/family_visa_research_guide.pdf')
+      .then(response => response.blob())
+      .then(blob => {
+        // Create a blob URL
+        const url = window.URL.createObjectURL(blob);
+        
+        // Create download link
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'family_visa_research_guide.pdf';
+        
+        // Trigger download
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        // Clean up
+        window.URL.revokeObjectURL(url);
+        
+        // Track the download event
+        if (typeof gtag !== 'undefined') {
+          gtag('event', 'download', {
+            'event_category': 'lead_magnet',
+            'event_label': 'visa_guide',
+            'value': 1
+          });
+        }
+        
+        // Show success message
+        button.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 8px;"><path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Downloaded Successfully!';
+        button.classList.add('btn-success');
+      })
+      .catch(error => {
+        console.error('Download failed:', error);
+        // Reset button on error
+        button.innerHTML = originalText;
+        button.disabled = false;
+        button.classList.remove('btn-success');
+        
+        // Fallback: try direct link
+        const link = document.createElement('a');
+        link.href = '/lead-magnets/family_visa_research_guide.pdf';
+        link.download = 'family_visa_research_guide.pdf';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      });
+  });
+</script>

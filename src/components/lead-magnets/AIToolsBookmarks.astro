@@ -1,0 +1,25 @@
+---
+import LeadMagnetBase from './LeadMagnetBase.astro';
+
+export interface Props {
+  formId?: string;
+}
+
+const { formId } = Astro.props;
+---
+
+<LeadMagnetBase
+  title="Get Your Free AI Tools Bookmark Collection"
+  description="Supercharge your productivity! Get instant access to 50+ curated AI tools for digital nomads. Save hours of research and start using the best tools today."
+  buttonText="Get Free Access"
+  apiEndpoint="/api/ai-tools-bookmarks-lead-magnet"
+  redirectUrl="/thank-you-ai-tools"
+  formId={formId}
+>
+  <div slot="benefits" class="lead-magnet-benefits" style="background-color: white; border-radius: 10px; padding: 20px; margin: 20px 0; max-width: 90%; margin-left: auto; margin-right: auto; text-align: left;">
+    <p>50+ AI tools organized by category</p>
+    <p>Free and paid options clearly marked</p>
+    <p>Best tools for content creation, marketing, and productivity</p>
+    <p>Simply import into your browser bookmarks</p>
+  </div>
+</LeadMagnetBase>

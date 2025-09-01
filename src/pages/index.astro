@@ -1,0 +1,647 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ResponsiveImage from '../components/ResponsiveImage.astro';
+import Hero from '../components/Hero.astro';
+import JobSitesFullWidth from '../components/lead-magnets/JobSitesFullWidth.astro';
+
+// Get the latest blog posts
+const posts = await import.meta.glob('../content/blog/*.mdx', { eager: true });
+const postsArray = Object.values(posts);
+const sortedPosts = postsArray
+  .sort((a, b) => new Date(b.frontmatter.date).getTime() - new Date(a.frontmatter.date).getTime())
+  .slice(0, 6);
+
+// SEO
+const title = "How to Fund Travel - Transform Your Dream Family Travel Into Reality";
+const description = "Learn proven strategies to fund your travels, build location independence, and create a life of adventure with your family. Start your journey today.";
+const image = "/images/optimized/how-to-fund-travel-balloons-hero.webp";
+---
+
+<BaseLayout title={title} description={description} image={image}>
+  <!-- Hero Section -->
+  <Hero
+    badgeIcon="⭐"
+    badgeText="Family Travel Expert"
+    title="Transform Your "
+    highlightText="Dream Family"
+    subtitle="Travel Into Reality. Learn proven strategies to fund your travels, build location independence, and create a life of adventure with your family. Start your journey today."
+    showStats={true}
+    showActions={true}
+    primaryAction={{
+      text: "Start Your Journey",
+      url: "https://vibenomads.org"
+    }}
+    secondaryAction={{
+      text: "Read Success Stories",
+      url: "/case-studies/"
+    }}
+  />
+
+  <!-- Story Section -->
+  <section class="story-section" aria-labelledby="story-heading">
+    <div class="container">
+      <div class="section-intro">
+        <h2 id="story-heading">From Dream to Reality</h2>
+        <div class="divider"></div>
+      </div>
+      <div class="story-content">
+        <div class="story-image">
+          <ResponsiveImage
+            src="/images/melissa-profile-how-to-fund-travel.png"
+            alt="Melissa, founder of How to Fund Travel"
+            width="400"
+            height="500"
+            priority={true}
+            sizes="(max-width: 768px) 100vw, 400px"
+            caption="Melissa - Family Travel Expert and Digital Nomad"
+          />
+        </div>
+        <div class="story-text">
+          <p>Hi there! I'm Melissa, the founder of How to Fund Travel. Buckle up, because my journey to get here has been anything but ordinary.</p>
+          <p>It all started with a dream: selling everything, traveling the world, and living a location-independent life with my family. Back then, I envisioned a perfectly planned path, with courses and mentors guiding every step. <em>(Spoiler alert: that's not how it went!)</em></p>
+          <p>The real turning point came in 2019. With almost no savings and no online income, we booked one-way business class tickets Singapore to Istanbul (we used frequent flyer miles). We were fuelled by faith and a burning desire to break free.</p>
+          <p>Now, over five years later, we're still living our dream. We're a family of six, living a life of freedom, travel, and financial autonomy. Through unexpected challenges and constant personal growth, we've learned a powerful lesson: <strong>fear is a terrible travel companion</strong>.</p>
+          <a href="/about" class="btn btn-secondary">Read My Full Story</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Categories -->
+  <section class="featured-categories" aria-labelledby="categories-heading">
+    <div class="container">
+      <div class="section-intro">
+        <h2 id="categories-heading">Explore Your Path to Freedom</h2>
+        <p>Practical strategies and insights to fund your travel lifestyle and break free from the ordinary.</p>
+        <div class="divider"></div>
+      </div>
+      <div class="category-grid">
+        <article class="category-card">
+          <div class="category-icon">
+            <img src="/images/icons/digital-nomad.svg" alt="" aria-hidden="true" width="60" height="60" loading="lazy">
+          </div>
+          <h3>Remote Work</h3>
+          <p>Transform your career into a location-independent income stream and work from anywhere in the world.</p>
+          <a href="/blog/category/remote-work" class="card-link">Explore Remote Work <span aria-hidden="true">→</span></a>
+        </article>
+        <article class="category-card">
+          <div class="category-icon">
+            <img src="/images/icons/online-business.svg" alt="" aria-hidden="true" width="60" height="60" loading="lazy">
+          </div>
+          <h3>Online Business</h3>
+          <p>Build sustainable online income sources that fuel your travel lifestyle while building valuable assets.</p>
+          <a href="/blog/category/online-business" class="card-link">Discover Business Models <span aria-hidden="true">→</span></a>
+        </article>
+        <article class="category-card">
+          <div class="category-icon">
+            <img src="/images/icons/investing.svg" alt="" aria-hidden="true" width="60" height="60" loading="lazy">
+          </div>
+          <h3>Travel Investing</h3>
+          <p>Smart investment strategies tailored for nomadic families to create passive income and financial security.</p>
+          <a href="/blog/category/investing" class="card-link">Learn Investing <span aria-hidden="true">→</span></a>
+        </article>
+        <article class="category-card">
+          <div class="category-icon">
+            <img src="/images/icons/mindset.svg" alt="" aria-hidden="true" width="60" height="60" loading="lazy">
+          </div>
+          <h3>Freedom Mindset</h3>
+          <p>Overcome limiting beliefs and develop the mental framework needed for a location-independent life.</p>
+          <a href="/blog/category/mindset" class="card-link">Shift Your Mindset <span aria-hidden="true">→</span></a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Posts -->
+  <section class="featured-posts" aria-labelledby="featured-posts-heading">
+    <div class="container">
+      <div class="section-intro">
+        <h2 id="featured-posts-heading">Latest Insights</h2>
+        <div class="divider"></div>
+      </div>
+      <div class="posts-grid">
+        {sortedPosts.map((post) => (
+          <article class="post-card">
+            <a href={post.url} class="post-image">
+              <ResponsiveImage
+                src={post.frontmatter.image || "/images/blog/default-blog-image.jpg"}
+                alt={post.frontmatter.title}
+                width="380"
+                height="220"
+                loading="lazy"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              />
+            </a>
+            <div class="post-category">{post.frontmatter.category}</div>
+            <h3 class="post-title">
+              <a href={post.url}>{post.frontmatter.title}</a>
+            </h3>
+            <p class="post-excerpt">{post.frontmatter.excerpt}</p>
+            <div class="post-meta">
+              <span class="post-date">Latest</span>
+              <span class="read-time">{post.frontmatter.readTime || '8 min read'}</span>
+            </div>
+          </article>
+        ))}
+      </div>
+      <div class="section-footer">
+        <a href="/blog/" class="btn btn-secondary">View All Articles</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Job Sites Full Width Section -->
+  <JobSitesFullWidth />
+
+  <!-- Why Choose Section -->
+  <section class="why-choose-section" aria-labelledby="why-choose-heading">
+    <div class="container">
+      <div class="section-intro">
+        <h2 id="why-choose-heading">Why Am I Sharing This?</h2>
+        <div class="divider"></div>
+      </div>
+      <div class="why-choose-content">
+        <div class="why-choose-text">
+          <p>Because if you're looking for someone who's actually living the life you crave, you've come to the right place. My mission is to help families like yours ditch the status quo and design a life that fuels your soul.</p>
+          <p>Here's the thing: fancy coaches with their picture-perfect lives might not resonate with you if your dream doesn't involve suburbia and keeping up with the Joneses. I believe in finding a mentor who aligns with your values and aspirations.</p>
+          <p>This website is for rebels, dream seekers, and anyone who knows there's more to life than the ordinary. I'm here to guide you through the process of deconditioning, ditching old patterns, and embracing a life of wild, free adventure (families included).</p>
+          <div class="cta-box">
+            <h3>Are you ready to take the first step?</h3>
+            <a href="/book-a-call" class="btn btn-primary">Let's Chat!</a>
+          </div>
+        </div>
+        <div class="testimonial-container">
+          <blockquote class="testimonial">
+            <p>"Melissa's practical advice helped us continue our traveling by showing us how to turn our income dreams into reality. In only a few weeks, we achieved more than we had in the 6 months prior."</p>
+            <cite>— Family of 6</cite>
+          </blockquote>
+          <blockquote class="testimonial">
+            <p>"I never thought we could continue to travel long-term with our kids. The strategies from How to Fund Travel changed everything for us."</p>
+            <cite>— Mother of 3</cite>
+          </blockquote>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero {
+    align-items: center;
+    background: url('/images/optimized/ocean-shores-transparency.webp') no-repeat center center;
+    background-size: cover;
+    color: var(--dark);
+    display: flex;
+    min-height: 80vh;
+    padding: 6rem 0;
+    position: relative;
+    text-align: center;
+  }
+  
+  .hero-content {
+    margin: 0 auto;
+    max-width: 800px;
+    position: relative;
+    z-index: 2;
+  }
+  
+  .hero-badge {
+    align-items: center;
+    background: var(--primary-color);
+    border-radius: 25px;
+    color: var(--white);
+    display: inline-flex;
+    font-size: 0.9rem;
+    font-weight: 600;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    padding: 0.5rem 1rem;
+  }
+  
+  .hero h1 {
+    color: var(--dark);
+    font-size: 3.5rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 1.5rem;
+    text-shadow: 0 2px 4px hsla(0, 0%, 100%, 0.8);
+  }
+  
+  .highlight {
+    color: #2a9d8f;
+    font-family: 'Lemon Tuesday', 'Shadows Into Light', cursive;
+  }
+  
+  .hero-subtitle {
+    color: var(--dark);
+    font-size: 1.25rem;
+    font-weight: 500;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+    text-shadow: 0 1px 2px hsla(0, 0%, 100%, 0.8);
+  }
+  
+  .hero-stats {
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+    margin-bottom: 2rem;
+  }
+  
+  .stat-item {
+    text-align: center;
+  }
+  
+  .stat-icon {
+    display: block;
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .stat-text {
+    color: var(--dark);
+    font-size: 0.9rem;
+    font-weight: 600;
+    line-height: 1.3;
+    text-shadow: 0 1px 2px hsla(0, 0%, 100%, 0.8);
+  }
+  
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+  }
+  
+  .story-section {
+    background: #f8f9fa;
+    padding: 6rem 0;
+  }
+  
+  .section-intro {
+    margin-bottom: 4rem;
+    text-align: center;
+  }
+  
+  .section-intro h2 {
+    color: #2a9d8f;
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
+  
+  .divider {
+    background: #f4a261;
+    height: 4px;
+    margin: 0 auto;
+    width: 80px;
+  }
+  
+  .story-content {
+    align-items: center;
+    display: grid;
+    gap: 4rem;
+    grid-template-columns: 1fr 2fr;
+  }
+  
+  .story-image img {
+    border-radius: 12px;
+    height: auto;
+    width: 100%;
+  }
+  
+  .story-text p {
+    color: #333;
+    font-size: 1.1rem;
+    line-height: 1.8;
+    margin-bottom: 1.5rem;
+  }
+  
+  .story-text strong {
+    color: #2a9d8f;
+  }
+  
+  .featured-categories {
+    background: #fff;
+    padding: 6rem 0;
+  }
+  
+  .category-grid {
+    display: grid;
+    gap: 2rem;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    margin-top: 3rem;
+  }
+  
+  .category-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+    text-align: center;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  
+  .category-card:hover {
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+    transform: translateY(-4px);
+  }
+  
+  .category-icon {
+    margin-bottom: 1.5rem;
+  }
+  
+  .category-card h3 {
+    color: #2a9d8f;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+  }
+  
+  .category-card p {
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+  }
+  
+  .card-link {
+    align-items: center;
+    color: #2a9d8f;
+    display: inline-flex;
+    font-weight: 600;
+    gap: 0.5rem;
+    text-decoration: none;
+  }
+  
+  .card-link:hover {
+    text-decoration: underline;
+  }
+  
+  .featured-posts {
+    background: #f8f9fa;
+    padding: 6rem 0;
+  }
+  
+  .posts-grid {
+    display: grid;
+    gap: 2rem;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    margin-top: 3rem;
+  }
+  
+  .post-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  
+  .post-card:hover {
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+    transform: translateY(-4px);
+  }
+  
+  .post-image {
+    display: block;
+    overflow: hidden;
+  }
+  
+  .post-image img {
+    height: 220px;
+    object-fit: cover;
+    transition: transform 0.2s;
+    width: 100%;
+  }
+  
+  .post-card:hover .post-image img {
+    transform: scale(1.05);
+  }
+  
+  .post-category {
+    background: #2a9d8f;
+    border-radius: 20px;
+    color: #fff;
+    display: inline-block;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin: 1rem 1.5rem 0;
+    padding: 0.3rem 0.8rem;
+  }
+  
+  .post-title {
+    margin: 1rem 1.5rem;
+  }
+  
+  .post-title a {
+    color: #333;
+    font-size: 1.2rem;
+    font-weight: 600;
+    line-height: 1.4;
+    text-decoration: none;
+  }
+  
+  .post-title a:hover {
+    color: #2a9d8f;
+  }
+  
+  .post-excerpt {
+    color: #666;
+    line-height: 1.6;
+    margin: 0 1.5rem 1rem;
+  }
+  
+  .post-meta {
+    color: #888;
+    display: flex;
+    font-size: 0.9rem;
+    justify-content: space-between;
+    padding: 0 1.5rem 1.5rem;
+  }
+  
+  .section-footer {
+    margin-top: 3rem;
+    text-align: center;
+  }
+  
+  .newsletter-section {
+    background: linear-gradient(135deg, #264653, #2a9d8f);
+    color: #fff;
+    padding: 6rem 0;
+  }
+  
+  .newsletter-section .container {
+    align-items: center;
+    display: grid;
+    gap: 4rem;
+    grid-template-columns: 1fr 1fr;
+  }
+  
+  .newsletter-content h2 {
+    color: #f8f9fa;
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
+  
+  .newsletter-tagline {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+    opacity: 0.9;
+  }
+  
+  .form-group {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  .form-input {
+    border: none;
+    border-radius: 8px;
+    flex: 1;
+    font-size: 1rem;
+    padding: 1rem;
+  }
+  
+  .form-privacy {
+    font-size: 0.9rem;
+    opacity: 0.8;
+  }
+  
+  .form-privacy a {
+    color: #f4a261;
+  }
+  
+  .form-message {
+    border-radius: 8px;
+    margin-top: 1rem;
+    padding: 1rem;
+  }
+  
+  .form-message.success {
+    background: rgba(76, 175, 80, 0.2);
+    color: #4caf50;
+  }
+  
+  .form-message.error {
+    background: rgba(244, 67, 54, 0.2);
+    color: #f44336;
+  }
+  
+  .loading-spinner {
+    animation: spin 1s ease-in-out infinite;
+    border: 2px solid hsla(0, 0%, 100%, 0.3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    display: inline-block;
+    height: 20px;
+    margin-left: 8px;
+    vertical-align: middle;
+    width: 20px;
+  }
+  
+  @keyframes spin {
+    to {
+      transform: rotate(1turn);
+    }
+  }
+  
+  .newsletter-image img {
+    border-radius: 12px;
+    height: auto;
+    width: 100%;
+  }
+  
+  .why-choose-section {
+    background: #fff;
+    padding: 6rem 0;
+  }
+  
+  .why-choose-content {
+    display: grid;
+    gap: 4rem;
+    grid-template-columns: 2fr 1fr;
+    margin-top: 3rem;
+  }
+  
+  .why-choose-text p {
+    color: #333;
+    font-size: 1.1rem;
+    line-height: 1.8;
+    margin-bottom: 1.5rem;
+  }
+  
+  .cta-box {
+    background: #f8f9fa;
+    border-radius: 12px;
+    margin-top: 2rem;
+    padding: 2rem;
+    text-align: center;
+  }
+  
+  .cta-box h3 {
+    color: #2a9d8f;
+    margin-bottom: 1rem;
+  }
+  
+  .testimonial-container {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+  
+  .testimonial {
+    background: #f8f9fa;
+    border-left: 4px solid #2a9d8f;
+    border-radius: 12px;
+    margin: 0;
+    padding: 2rem;
+  }
+  
+  .testimonial p {
+    color: #333;
+    font-style: italic;
+    margin-bottom: 1rem;
+  }
+  
+  .testimonial cite {
+    color: #2a9d8f;
+    font-weight: 600;
+  }
+  
+  @media (max-width: 768px) {
+    .hero .container {
+      grid-template-columns: 1fr;
+      text-align: center;
+    }
+    
+    .hero h1 {
+      font-size: 2.5rem;
+    }
+    
+    .hero-stats {
+      justify-content: center;
+    }
+    
+    .story-content,
+    .category-grid,
+    .posts-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .newsletter-section .container {
+      grid-template-columns: 1fr;
+      text-align: center;
+    }
+    
+    .form-group {
+      flex-direction: column;
+    }
+    
+    .why-choose-content {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

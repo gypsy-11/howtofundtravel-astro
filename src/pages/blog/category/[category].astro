@@ -1,0 +1,240 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import ResponsiveImage from '../../../components/ResponsiveImage.astro';
+
+// Get the category from the URL params
+const { category: categorySlug } = Astro.params;
+
+// Get all posts and find the matching category
+let posts = [];
+let category = '';
+
+try {
+  posts = await getCollection('blog');
+  
+  // Find the category that matches the slug
+  const allCategories = [...new Set(posts.flatMap(post => post.data.category))];
+  category = allCategories.find(cat => 
+    cat.toLowerCase().replace(/\s+/g, '-') === categorySlug
+  );
+  
+  if (category) {
+    // Filter posts by the found category
+    posts = posts.filter(post => post.data.category.includes(category));
+  } else {
+    // Category not found, redirect to 404
+    return Astro.redirect('/404');
+  }
+} catch (error) {
+  console.error('Error fetching posts:', error);
+  return Astro.redirect('/404');
+}
+
+// Sort posts by published date (newest first)
+const sortedPosts = posts.sort((a, b) => new Date(b.data.publishedDate).getTime() - new Date(a.data.publishedDate).getTime());
+---
+
+<BaseLayout 
+  title={`${category} - Blog | How to Fund Travel`}
+  description={`Explore our ${category.toLowerCase()} articles and guides for funding travel and achieving location independence.`}
+  canonical={`https://howtofund.travel/blog/category/${category.toLowerCase().replace(/\s+/g, '-')}`}
+>
+  <!-- Category Header -->
+  <section class="blog-header">
+    <div class="container">
+      <h1><span class="highlight">{category}</span> Articles</h1>
+      <p>Discover our latest {category.toLowerCase()} content to help you fund your <span class="highlight">travel dreams</span></p>
+    </div>
+  </section>
+
+  <!-- Blog Posts Grid -->
+  <section class="blog-content">
+    <div class="container">
+      <div class="blog-grid">
+        {sortedPosts.map((post) => (
+          <article class="blog-card">
+            <div class="blog-card-image">
+              <a href={`/blog/${post.slug}`} class="blog-card-image-link">
+                <ResponsiveImage
+                  src={post.data.image || "/images/blog/default-blog-image.jpg"}
+                  alt={post.data.title}
+                  width="400"
+                  height="250"
+                  loading="lazy"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                />
+              </a>
+            </div>
+            <div class="blog-card-content">
+              <h2>
+                <a href={`/blog/${post.slug}`}>{post.data.title}</a>
+              </h2>
+              <p>{post.data.description}</p>
+              <div class="blog-card-meta">
+                <span class="date">
+                  {new Date(post.data.publishedDate).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                  })}
+                </span>
+                <span class="category">{post.data.category[0]}</span>
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+      
+      {sortedPosts.length === 0 && (
+        <div class="no-posts">
+          <h2>No posts found in this category</h2>
+          <p>Check back soon for new {category.toLowerCase()} content!</p>
+          <a href="/blog/" class="btn btn-primary">View All Posts</a>
+        </div>
+      )}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* Lemon Tuesday font is now loaded from local file via main.css */
+
+  /* Hero highlight style */
+  .blog-header .highlight {
+    font-family: 'Lemon Tuesday', 'Shadows Into Light', cursive;
+    color: #2A9D8F;
+  }
+
+  .blog-header {
+    position: relative;
+    padding: 4rem 0;
+    background: url('/images/optimized/ocean-shores-transparency.webp') no-repeat center center;
+    background-size: cover;
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+    color: var(--dark);
+    text-align: center;
+  }
+  
+  .blog-header h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    color: var(--dark);
+    text-shadow: 0 2px 4px rgba(255, 255, 255, 0.8);
+  }
+  
+  .blog-header p {
+    font-size: 1.2rem;
+    color: var(--dark);
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+  }
+  
+  .blog-content {
+    padding: 4rem 0;
+  }
+  
+  .blog-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+  
+  .blog-card {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  
+  .blog-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+  }
+  
+  .blog-card-image {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .blog-card-image-link {
+    display: block;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.2s ease;
+  }
+
+  .blog-card-image-link:hover {
+    transform: scale(1.02);
+  }
+
+  .blog-card-image img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+  }
+  
+  .blog-card-content {
+    padding: 1.5rem;
+  }
+  
+  .blog-card-content h2 {
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+  }
+  
+  .blog-card-content h2 a {
+    color: #2A9D8F;
+    text-decoration: none;
+  }
+  
+  .blog-card-content h2 a:hover {
+    text-decoration: underline;
+  }
+  
+  .blog-card-content p {
+    color: #666;
+    margin-bottom: 1rem;
+    line-height: 1.6;
+  }
+  
+  .blog-card-meta {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.9rem;
+    color: #888;
+  }
+  
+  .category {
+    background: #f0f0f0;
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+  }
+  
+  .no-posts {
+    text-align: center;
+    padding: 4rem 0;
+  }
+  
+  .no-posts h2 {
+    color: #2A9D8F;
+    margin-bottom: 1rem;
+  }
+  
+  .no-posts p {
+    color: #666;
+    margin-bottom: 2rem;
+  }
+  
+  @media (max-width: 768px) {
+    .blog-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .blog-header h1 {
+      font-size: 2rem;
+    }
+  }
+</style>

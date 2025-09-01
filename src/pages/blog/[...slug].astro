@@ -1,0 +1,701 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import BlogCategoryFilter from '../../components/BlogCategoryFilter.astro';
+
+// Get the slug from the URL params
+const { slug } = Astro.params;
+
+// Get the post from the collection
+let post;
+try {
+  const posts = await getCollection('blog');
+  post = posts.find(p => p.slug === slug);
+} catch (error) {
+  console.error('Error fetching posts:', error);
+}
+
+// Redirect to 404 if post not found
+if (!post) {
+  return Astro.redirect('/404');
+}
+
+// Render the post content
+const { Content } = await post.render();
+---
+
+<BaseLayout 
+  title={post.data.title}
+  description={post.data.description}
+  image={post.data.image}
+  canonical={post.data.canonical}
+  type="article"
+  publishedTime={post.data.publishedDate.toISOString()}
+  modifiedTime={post.data.updatedDate?.toISOString()}
+>
+  <article class="blog-post-content">
+    <!-- Blog Post Hero Section -->
+    <section class="blog-hero">
+      <div class="container">
+        <div class="blog-hero-content">
+          <div class="blog-hero-text">
+            <div class="blog-post-meta">
+              <time datetime={post.data.publishedDate.toISOString()}>
+                {post.data.publishedDate.toLocaleDateString('en-US', { 
+                  year: 'numeric', 
+                  month: 'long', 
+                  day: 'numeric' 
+                })}
+              </time>
+              <span class="read-time">15 min read</span>
+            </div>
+            <h1>{post.data.title}</h1>
+            <div class="blog-hero-subtitle">
+              <p><em>How to leverage your remote work position to fund your travel dreams - based on 4.5 years of living as a digital nomad family with a remote work income</em></p>
+            </div>
+            <div class="blog-post-categories">
+              {post.data.category.map((cat) => (
+                <a href={`/blog/category/${cat.toLowerCase().replace(/\s+/g, '-')}`} class="blog-post-category">
+                  {cat}
+                </a>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Category Filter Section -->
+    <BlogCategoryFilter 
+      currentCategory={post.data.category[0].toLowerCase().replace(/\s+/g, '-')}
+      showAllButton={true}
+    />
+
+    <!-- Blog Post Body -->
+    <div class="blog-post-body">
+      <div class="container">
+        <div class="blog-content">
+          <Content />
+        </div>
+        
+        <!-- Blog Post Footer -->
+        <div class="blog-post-footer">
+          <div class="blog-footer-content">
+            <div class="blog-tags">
+              <h3>Tags:</h3>
+              <div class="tag-list">
+                {post.data.tags.map((tag) => (
+                  <a href={`/blog/tag/${tag.toLowerCase().replace(/\s+/g, '-')}`} class="tag">{tag}</a>
+                ))}
+              </div>
+            </div>
+            
+            <div class="blog-author">
+              <h3>About the Author</h3>
+              <p>Melissa and her family of six have been travelling the world as digital nomads since February 2020. She's funding her travels with her remote work job and working on adding multiple income streams with online businesses. She shares everything she learns in her Skool community, Vibe Nomads. It's a free community and we'd love to see you inside.</p>
+              <a href="https://vibenomads.org" class="btn btn-primary author-cta">Join Vibe Nomads</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+</BaseLayout>
+
+<script>
+  import { trackTagClick, trackCategoryClick, trackVibeNomadsClick } from '../../utils/eventHandlers.js';
+  
+  document.addEventListener('DOMContentLoaded', function() {
+    // Track tag clicks
+    const tagLinks = document.querySelectorAll('.tag-list .tag');
+    tagLinks.forEach(tag => {
+      tag.addEventListener('click', function() {
+        const tagName = this.textContent.trim();
+        trackTagClick(tagName);
+      });
+    });
+    
+    // Track category clicks
+    const categoryLinks = document.querySelectorAll('.blog-post-category');
+    categoryLinks.forEach(category => {
+      category.addEventListener('click', function() {
+        const categoryName = this.textContent.trim();
+        trackCategoryClick(categoryName);
+      });
+    });
+    
+    // Track Vibe Nomads community clicks
+    const vibeNomadsLinks = document.querySelectorAll('a[href*="vibenomads.org"]');
+    vibeNomadsLinks.forEach(link => {
+      link.addEventListener('click', function() {
+        trackVibeNomadsClick('blog_post_author');
+      });
+    });
+  });
+</script>
+
+<style>
+  .blog-hero {
+    position: relative !important;
+    padding: 4rem 0 !important;
+    background: url('/images/optimized/ocean-shores-transparency.webp') no-repeat center center !important;
+    background-size: cover !important;
+    min-height: 60vh !important;
+    display: flex !important;
+    align-items: center !important;
+    color: var(--dark) !important;
+    text-align: center !important;
+    margin-top: 0 !important;
+  }
+
+  .blog-hero-content {
+    position: relative !important;
+    z-index: 2 !important;
+    max-width: 800px !important;
+    margin: 0 auto !important;
+    text-align: center !important;
+    top: auto !important;
+    left: auto !important;
+    transform: none !important;
+    width: auto !important;
+    background: transparent !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
+
+  .blog-post-meta {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    font-size: 0.9rem;
+    color: var(--dark);
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+  }
+
+  .blog-post-categories {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .blog-post-category {
+    background: var(--primary-color);
+    color: var(--white);
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    font-size: 0.9rem;
+  }
+
+  .blog-post-category:hover {
+    background: var(--primary-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  }
+
+  .blog-hero h1 {
+    font-size: 2.5rem !important;
+    margin-bottom: 1rem !important;
+    line-height: 1.2 !important;
+    color: var(--dark) !important;
+    text-shadow: 0 2px 4px rgba(255, 255, 255, 0.8) !important;
+  }
+
+  .blog-hero-subtitle {
+    font-size: 1.1rem !important;
+    color: var(--dark) !important;
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8) !important;
+  }
+
+  .blog-post-body {
+    padding: 4rem 0;
+  }
+
+  .blog-content {
+    max-width: 800px;
+    margin: 0 auto;
+    line-height: 1.8;
+  }
+
+  /* Blog Sections */
+  .blog-content .blog-section {
+    margin-bottom: 3rem;
+    padding: 0;
+  }
+
+  .blog-content .blog-section:last-child {
+    margin-bottom: 0;
+  }
+
+  /* Ensure proper spacing for blog sections */
+  .blog-content > div.blog-section {
+    margin-bottom: 3rem;
+  }
+
+  .blog-content > div.blog-section:last-child {
+    margin-bottom: 0;
+  }
+
+  .blog-content h2 {
+    font-size: 2rem;
+    color: var(--dark);
+    margin: 2rem 0 1.5rem 0;
+    font-weight: 600;
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: 0.5rem;
+  }
+
+  .blog-content h3 {
+    font-size: 1.5rem;
+    color: var(--dark);
+    margin: 1.5rem 0 1rem 0;
+    font-weight: 600;
+  }
+
+  .blog-content h4 {
+    color: var(--dark);
+    margin: 1rem 0 0.5rem 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+  }
+
+  .blog-content p {
+    font-size: 1.125rem;
+    line-height: 1.7;
+    margin-bottom: 1.5rem;
+    color: var(--text-color);
+  }
+
+  .blog-content ul, .blog-content ol {
+    margin: 1.5rem 0;
+    padding-left: 2rem;
+  }
+
+  .blog-content li {
+    margin-bottom: 0.75rem;
+    font-size: 1.125rem;
+    line-height: 1.6;
+  }
+
+  .blog-content strong {
+    color: var(--primary-color);
+    font-weight: 600;
+  }
+
+  .blog-content em {
+    color: var(--medium);
+    font-style: italic;
+  }
+
+  /* Benefits Section */
+  .blog-content .benefits-section {
+    background: var(--light);
+    padding: 2rem;
+    border-radius: var(--radius-lg);
+    margin: 3rem 0;
+  }
+
+  .blog-content .benefits-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+
+  .blog-content .benefit-item {
+    background: white;
+    padding: 1.5rem;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    border-left: 4px solid var(--primary-color);
+  }
+
+  .blog-content .benefit-item h3 {
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+    font-size: 1.25rem;
+  }
+
+  .blog-content .benefit-item p {
+    margin-bottom: 0;
+    font-size: 1rem;
+  }
+
+  /* Callout Box */
+  .blog-content .callout-box,
+  .blog-content div.callout-box {
+    background: rgba(59, 174, 160, 0.05);
+    border-left: 3px solid var(--primary-color);
+    padding: 1.5rem 2rem;
+    border-radius: var(--radius-md);
+    margin: 2rem 0;
+    position: relative;
+  }
+
+  .blog-content .callout-box h3,
+  .blog-content div.callout-box h3 {
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
+
+  .blog-content .callout-box p,
+  .blog-content div.callout-box p {
+    margin: 0 0 1rem 0;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--dark);
+  }
+
+  .blog-content .callout-box ul,
+  .blog-content div.callout-box ul {
+    margin: 1rem 0 0 0;
+    padding-left: 1.5rem;
+  }
+
+  .blog-content .callout-box li,
+  .blog-content div.callout-box li {
+    margin-bottom: 0.5rem;
+    color: var(--dark);
+  }
+
+  /* Lead Magnet Section */
+  .blog-content .lead-magnet-section,
+  .blog-content div.lead-magnet-section {
+    background: transparent;
+    color: var(--dark);
+    padding: 0;
+    border-radius: 0;
+    margin: 3rem 0;
+    text-align: center;
+  }
+
+  .blog-content .lead-magnet-container {
+    background: linear-gradient(135deg, var(--primary-light) 0%, var(--secondary-light) 100%);
+    border-radius: var(--radius-lg);
+    padding: 2.5rem;
+    box-shadow: var(--shadow-lg);
+    position: relative;
+    overflow: hidden;
+    margin: 2rem 0;
+    text-align: center;
+  }
+
+  .blog-content .lead-magnet-container h3 {
+    color: var(--dark) !important;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+
+  .blog-content .lead-magnet-container p {
+    color: var(--medium) !important;
+    margin-bottom: 1.5rem;
+    font-size: 1.125rem;
+    line-height: 1.6;
+  }
+
+  .blog-content .lead-magnet-benefits {
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    margin: 20px 0;
+    max-width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: left;
+  }
+
+  .blog-content .lead-magnet-benefits p {
+    color: var(--dark) !important;
+    margin-bottom: 0.75rem;
+    font-size: 1rem;
+  }
+
+  .blog-content .lead-magnet-benefits ul {
+    list-style: none;
+    padding: 0;
+    padding-left: 1.5rem;
+    margin: 1.5rem 0;
+  }
+
+  .blog-content .lead-magnet-benefits li {
+    margin-bottom: 0.5rem;
+    color: var(--dark);
+  }
+
+  /* FAQ Section */
+  .blog-content .faq-section {
+    margin: 3rem 0;
+  }
+
+  .blog-content .faq-container {
+    margin-top: 2rem;
+  }
+
+  .blog-content .faq-item {
+    background: var(--light);
+    padding: 1.5rem;
+    border-radius: var(--radius-md);
+    margin-bottom: 1rem;
+    border-left: 4px solid var(--primary-color);
+  }
+
+  .blog-content .faq-item h3 {
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+    font-size: 1.25rem;
+  }
+
+  .blog-content .faq-item p {
+    margin-bottom: 0;
+    color: var(--medium);
+  }
+
+  /* Job Platforms Grid */
+  .blog-content .job-platforms-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin: 2rem 0;
+  }
+
+  .blog-content .platform-card {
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    border: 2px solid #e9ecef;
+    border-radius: 12px;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .blog-content .platform-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #2A9D8F, #264653);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+  }
+
+  .blog-content .platform-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 30px rgba(42, 157, 143, 0.15);
+    border-color: #2A9D8F;
+  }
+
+  .blog-content .platform-card:hover::before {
+    transform: scaleX(1);
+  }
+
+  .blog-content .platform-card a {
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+  }
+
+  .blog-content .platform-name {
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: #2c3e50;
+    flex: 1;
+  }
+
+  .blog-content .platform-icon {
+    font-size: 1.5rem;
+    margin-left: 1rem;
+    opacity: 0.8;
+    transition: all 0.3s ease;
+  }
+
+  .blog-content .platform-card:hover .platform-icon {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+
+  .blog-content .platform-card:hover .platform-name {
+    color: #2A9D8F;
+  }
+
+  /* Featured Image Section */
+  .blog-content .featured-image-section {
+    margin: 3rem 0;
+  }
+
+  .blog-content .featured-image-container {
+    text-align: center;
+    margin: 2rem 0;
+  }
+
+  .blog-content .featured-image {
+    max-width: 100%;
+    width: 1200px;
+    height: 630px;
+    object-fit: cover;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    margin-bottom: 1rem;
+  }
+
+  .blog-content .image-caption {
+    font-style: italic;
+    color: var(--medium);
+    font-size: 0.95rem;
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.5;
+  }
+
+  .blog-post-footer {
+    margin-top: 4rem;
+    padding-top: 2rem;
+    border-top: 1px solid #e0e0e0;
+  }
+
+  .blog-tags {
+    margin-bottom: 2rem;
+  }
+
+  .blog-tags h3 {
+    margin-bottom: 1rem;
+    color: #2A9D8F;
+  }
+
+  .tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .tag {
+    background: #f0f0f0;
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    color: #666;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.2s ease;
+  }
+  
+  .tag:hover {
+    background: #e0e0e0;
+    color: #2A9D8F;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+
+  .blog-footer-content {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .blog-author {
+    background: #f8f9fa;
+    padding: 2rem;
+    border-radius: 8px;
+    text-align: center;
+  }
+  
+  .blog-author h3 {
+    color: #2A9D8F;
+    margin-bottom: 1rem;
+  }
+  
+  .author-cta {
+    margin-top: 1rem;
+    display: inline-block;
+    padding: 0.5rem 1.25rem;
+    font-size: 0.95rem;
+  }
+
+  @media (max-width: 768px) {
+    .blog-hero h1 {
+      font-size: 2rem;
+    }
+    
+    .blog-post-meta {
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .blog-post-categories {
+      gap: 0.3rem;
+      margin-top: 1rem;
+    }
+    
+    .blog-post-category {
+      font-size: 0.8rem;
+      padding: 0.25rem 0.6rem;
+    }
+    
+    .blog-content {
+      padding: 0 1rem;
+    }
+
+    .blog-content h2 {
+      font-size: 1.75rem;
+    }
+
+    .blog-content h3 {
+      font-size: 1.4rem;
+    }
+
+    .blog-content .benefits-grid {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+
+    .blog-content .lead-magnet-section {
+      padding: 2rem 1rem;
+    }
+
+    .blog-content .lead-magnet-container {
+      padding: 1.5rem;
+    }
+
+    .blog-content .featured-image {
+      width: 100%;
+      height: auto;
+      max-height: 400px;
+    }
+
+    .blog-content .job-platforms-grid {
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+    }
+
+    .blog-content .platform-card {
+      padding: 1.25rem;
+    }
+
+    .blog-content .platform-name {
+      font-size: 1rem;
+    }
+
+    .blog-content .platform-icon {
+      font-size: 1.25rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .blog-content .job-platforms-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
