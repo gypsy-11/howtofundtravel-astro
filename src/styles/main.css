@@ -1,5 +1,4 @@
-/* Import custom fonts */
-@import './fonts.css';
+/* Import custom fonts - handled by BaseLayout import */
 
 /* 
    Main Stylesheet for How to Fund Travel
