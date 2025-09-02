@@ -87,7 +87,7 @@ body {
 
 .highlight {
   color: #2a9d8f;
-  font-family: 'Lemon Tuesday', 'Shadows Into Light', cursive;
+  font-family: 'LemonTuesday', 'Shadows Into Light', cursive;
 }
 
 .hero-subtitle {

@@ -443,7 +443,7 @@ main {
 .hero {
   position: relative;
   padding: 4rem 0;
-  background: url('/images/optimized/ocean-shores-transparency.png') no-repeat center center;
+  background: url('/images/optimized/ocean-shores-transparency-xl.webp') no-repeat center center;
   background-size: cover;
   min-height: 80vh;
   display: flex;
@@ -532,7 +532,7 @@ main {
 
 /* Hero highlight style */
 .hero .highlight {
-  font-family: 'Lemon Tuesday', 'Shadows Into Light', cursive;
+  font-family: 'LemonTuesday', 'Shadows Into Light', cursive;
   color: var(--primary-color);
 }
 
