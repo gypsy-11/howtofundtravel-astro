@@ -32,31 +32,12 @@ const {
   lightbox = false
 } = Astro.props;
 
-// Use optimized image path if available, fallback to original
+// Use optimized image path if available
 const optimizedSrc = src.replace('/images/', '/images/optimized/');
-// Remove file extension to check if optimized version exists
-const baseName = src.replace(/\.(jpg|jpeg|png|webp|avif)$/i, '');
-const optimizedBaseName = baseName.replace('/images/', '/images/optimized/');
-
-// Try to find an optimized version with common extensions
-const findOptimizedImage = () => {
-  const extensions = ['.webp', '.jpg', '.png'];
-  for (const ext of extensions) {
-    const testPath = optimizedBaseName + ext;
-    // For now, we'll use the webp version as default since we know it exists
-    if (ext === '.webp') {
-      return testPath;
-    }
-  }
-  // Fallback to original image if no optimized version found
-  return src;
-};
-
-const finalSrc = findOptimizedImage();
 ---
 
 <img
-  src={finalSrc}
+  src={optimizedSrc}
   alt={alt}
   width={width}
   height={height}
@@ -64,7 +45,6 @@ const finalSrc = findOptimizedImage();
   loading={loading}
   decoding={decoding}
   onload="this.classList.add('lazy-loaded')"
-  onerror="this.onerror=null; this.src=this.src.replace('/images/optimized/', '/images/'); console.log('Optimized image failed, falling back to original:', this.src);"
 />
 
 {lightbox && caption && (

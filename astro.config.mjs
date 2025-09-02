@@ -16,17 +16,5 @@ export default defineConfig({
   // Fix: Disable auto-inlining to ensure all CSS is properly processed
   build: {
     inlineStylesheets: 'never'
-  },
-
-  // Vite configuration for better asset handling
-  vite: {
-    build: {
-      rollupOptions: {
-        output: {
-          assetFileNames: 'assets/[name].[hash][extname]'
-        }
-      }
-    },
-    assetsInclude: ['**/*.otf', '**/*.woff', '**/*.woff2', '**/*.ttf']
   }
 });
