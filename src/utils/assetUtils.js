@@ -8,11 +8,11 @@
 export function importCriticalAssets() {
   try {
     // Import image assets
-    import.meta.glob('/public/images/optimized/ocean-shores-transparency.webp');
-    import.meta.glob('/public/images/optimized/ocean-shores-transparency-xl.webp');
+    import.meta.glob('/images/optimized/ocean-shores-transparency.webp');
+    import.meta.glob('/images/optimized/ocean-shores-transparency-xl.webp');
     
     // Import font assets
-    import.meta.glob('/public/fonts/LemonTuesday.otf');
+    import.meta.glob('/fonts/LemonTuesday.otf');
 
     // Return true to indicate success
     return true;

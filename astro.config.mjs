@@ -43,12 +43,6 @@ export default defineConfig({
     },
     // Ensure public directory assets are properly handled
     publicDir: './public',
-    resolve: {
-      alias: {
-        '/images': '/public/images',
-        '/fonts': '/public/fonts'
-      }
-    },
     // Add custom plugins
     plugins: [assetResolverPlugin()]
   }
