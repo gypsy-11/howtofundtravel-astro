@@ -10,9 +10,7 @@
     "astro": "astro",
     "optimize-images": "node scripts/optimize-images.js",
     "cleanup-images": "node scripts/cleanup-images.js",
-    "optimize-css": "node scripts/optimize-css.js",
-    "optimize-js": "node scripts/optimize-bundle.js",
-    "optimize-all": "node scripts/optimize-all.js",
+
     "analyze-bundle": "astro build && npx vite-bundle-analyzer dist/_astro/",
     "build:analyze": "npm run build && npm run analyze-bundle"
   },

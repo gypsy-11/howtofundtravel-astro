@@ -29,9 +29,7 @@ All commands are run from the root of the project, from a terminal:
 | `npm run build`           | Build your production site to `./dist/`          |
 | `npm run preview`         | Preview your build locally, before deploying     |
 | `npm run optimize-images` | Optimize images in the project                   |
-| `npm run optimize-css`    | Optimize CSS files                               |
-| `npm run optimize-js`     | Optimize JavaScript bundles                      |
-| `npm run optimize-all`    | Run all optimization scripts                     |
+
 
 ## 🚀 Deployment
 
