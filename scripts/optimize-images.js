@@ -60,7 +60,11 @@ async function getImageFiles(dir) {
     const fullPath = path.join(dir, file.name);
     
     if (file.isDirectory()) {
-      // Recursively process subdirectories
+      // Skip the optimized directory to prevent recursive processing
+      if (file.name === 'optimized') {
+        continue;
+      }
+      // Recursively process other subdirectories
       const subFiles = await getImageFiles(fullPath);
       imageFiles.push(...subFiles);
     } else if (file.isFile()) {
