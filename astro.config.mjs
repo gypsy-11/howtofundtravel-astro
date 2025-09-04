@@ -31,10 +31,6 @@ export default defineConfig({
           assetFileNames: 'assets/[name]-[hash].[ext]'
         }
       }
-    },
-    // Reduce unnecessary chunk generation
-    optimizeDeps: {
-      include: ['astro']
     }
   }
 });
