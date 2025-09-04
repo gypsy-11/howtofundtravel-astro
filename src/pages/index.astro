@@ -1,6 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import ResponsiveImage from '../components/ResponsiveImage.astro';
+import Image from '../components/Image.astro';
 import Hero from '../components/Hero.astro';
 import JobSitesFullWidth from '../components/lead-magnets/JobSitesFullWidth.astro';
 
@@ -46,7 +46,7 @@ const image = "/images/optimized/how-to-fund-travel-balloons-hero.webp";
       </div>
       <div class="story-content">
         <div class="story-image">
-          <ResponsiveImage
+          <Image
             src="/images/melissa-profile-how-to-fund-travel.png"
             alt="Melissa, founder of How to Fund Travel"
             width="400"
@@ -123,7 +123,7 @@ const image = "/images/optimized/how-to-fund-travel-balloons-hero.webp";
         {sortedPosts.map((post) => (
           <article class="post-card">
             <a href={post.url} class="post-image">
-              <ResponsiveImage
+              <Image
                 src={post.frontmatter.image || "/images/blog/default-blog-image.jpg"}
                 alt={post.frontmatter.title}
                 width="380"

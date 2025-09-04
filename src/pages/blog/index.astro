@@ -1,7 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import ResponsiveImage from '../../components/ResponsiveImage.astro';
+import Image from '../../components/Image.astro';
 import BlogCategoryFilter from '../../components/BlogCategoryFilter.astro';
 
 // Get all blog posts, sorted by published date
@@ -62,7 +62,7 @@ const sortedPosts = posts
         <article class="featured-post-card large" data-category="remote-work">
           <a href="/blog/fundtravelremotework" class="post-link">
             <div class="post-image">
-              <ResponsiveImage
+              <Image
                 src="/images/optimized/how-to-fund-travel-kayaking.webp"
                 alt="Family kayaking on a calm river surrounded by lush green mountains in Vietnam"
                 width="400"
@@ -87,7 +87,7 @@ const sortedPosts = posts
         <article class="featured-post-card" data-category="remote-work">
           <a href="/blog/remote-work-strategies-for-traveling-parents" class="post-link">
             <div class="post-image">
-              <ResponsiveImage
+              <Image
                 src="/images/kids-play-on-beach-how-to-fund-travel.png"
                 alt="Children playing on a beautiful beach, representing the freedom and joy of family travel while working remotely"
                 width="300"
@@ -112,7 +112,7 @@ const sortedPosts = posts
         <article class="featured-post-card" data-category="online-business">
           <a href="/blog/ai-productivity-breakthrough-35-hours-3-hours" class="post-link">
             <div class="post-image">
-              <ResponsiveImage
+              <Image
                 src="/images/optimized/G0104928.webp"
                 alt="Woman working efficiently with AI tools on laptop in tropical setting"
                 width="300"
@@ -137,7 +137,7 @@ const sortedPosts = posts
         <article class="featured-post-card" data-category="remote-work">
           <a href="/blog/35-remote-work-sites-for-2025" class="post-link">
             <div class="post-image">
-              <ResponsiveImage
+              <Image
                 src="/images/optimized/how-to-fund-travel-melissa-work-anywhere.webp"
                 alt="Melissa working remotely on her laptop while traveling"
                 width="300"
@@ -190,7 +190,7 @@ const sortedPosts = posts
             {post.data.image && (
               <div class="blog-card-image">
                 <a href={`/blog/${post.slug}`} class="blog-card-image-link">
-                  <ResponsiveImage
+                  <Image
                     src={post.data.image}
                     alt={post.data.title}
                     width="400"

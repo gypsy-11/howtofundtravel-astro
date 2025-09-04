@@ -1,7 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
-import ResponsiveImage from '../../../components/ResponsiveImage.astro';
+import Image from '../../../components/Image.astro';
 
 // Get the category from the URL params
 const { category: categorySlug } = Astro.params;
@@ -56,7 +56,7 @@ const sortedPosts = posts.sort((a, b) => new Date(b.data.publishedDate).getTime(
           <article class="blog-card">
             <div class="blog-card-image">
               <a href={`/blog/${post.slug}`} class="blog-card-image-link">
-                <ResponsiveImage
+                <Image
                   src={post.data.image || "/images/blog/default-blog-image.jpg"}
                   alt={post.data.title}
                   width="400"
