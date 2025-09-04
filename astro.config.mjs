@@ -16,5 +16,25 @@ export default defineConfig({
   // Fix: Disable auto-inlining to ensure all CSS is properly processed
   build: {
     inlineStylesheets: 'never'
+  },
+
+  // Vite configuration to optimize builds and reduce empty chunks
+  vite: {
+    build: {
+      rollupOptions: {
+        output: {
+          // Prevent empty chunks
+          manualChunks: undefined,
+          // Optimize chunk naming
+          chunkFileNames: 'assets/[name]-[hash].js',
+          entryFileNames: 'assets/[name]-[hash].js',
+          assetFileNames: 'assets/[name]-[hash].[ext]'
+        }
+      }
+    },
+    // Reduce unnecessary chunk generation
+    optimizeDeps: {
+      include: ['astro']
+    }
   }
 });
