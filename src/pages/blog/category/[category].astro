@@ -1,7 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
-import Image from '../../../components/Image.astro';
+
 
 // Get the category from the URL params
 const { category: categorySlug } = Astro.params;
@@ -56,14 +56,14 @@ const sortedPosts = posts.sort((a, b) => new Date(b.data.publishedDate).getTime(
           <article class="blog-card">
             <div class="blog-card-image">
               <a href={`/blog/${post.slug}`} class="blog-card-image-link">
-                <Image
+                <img
                   src={post.data.image || "/images/blog/default-blog-image.jpg"}
                   alt={post.data.title}
                   width="400"
                   height="250"
                   loading="lazy"
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                />
+                 />
               </a>
             </div>
             <div class="blog-card-content">
@@ -109,7 +109,7 @@ const sortedPosts = posts.sort((a, b) => new Date(b.data.publishedDate).getTime(
   .blog-header {
     position: relative;
     padding: 4rem 0;
-    background: url('/images/optimized/ocean-shores-transparency.webp') no-repeat center center;
+    background: var(--hero-bg-image) no-repeat center center;
     background-size: cover;
     min-height: 60vh;
     display: flex;

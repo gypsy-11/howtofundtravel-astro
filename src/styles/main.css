@@ -37,6 +37,9 @@
   --text-color: var(--dark);
   --secondary-light: #FEF3C7;
   
+  /* Hero Background Images */
+  --hero-bg-image: url('/images/optimized/ocean-shores-transparency-xl.webp');
+  
   /* Typography */
   --font-heading: 'Montserrat', sans-serif;
   --font-body: 'Open Sans', sans-serif;
@@ -443,7 +446,7 @@ main {
 .hero {
   position: relative;
   padding: 4rem 0;
-  background: url('/images/optimized/ocean-shores-transparency-xl.webp') no-repeat center center;
+  background: var(--hero-bg-image) no-repeat center center;
   background-size: cover;
   min-height: 80vh;
   display: flex;
@@ -530,7 +533,13 @@ main {
   justify-content: center;
 }
 
-/* Hero highlight style */
+/* Global highlight style - used consistently across all pages */
+.highlight {
+  font-family: 'LemonTuesday', 'Shadows Into Light', cursive;
+  color: var(--primary-color);
+}
+
+/* Legacy hero highlight style for backward compatibility */
 .hero .highlight {
   font-family: 'LemonTuesday', 'Shadows Into Light', cursive;
   color: var(--primary-color);

@@ -1,6 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import Image from '../components/Image.astro';
+
 
 // SEO for 404 page
 const title = "Page Not Found - How to Fund Travel";
@@ -55,14 +55,14 @@ if (typeof window !== 'undefined') {
       </div>
       
       <div class="error-image">
-        <Image
+        <img
           src="/images/optimized/how-to-fund-travel-balloons-hero.webp"
           alt="Travel balloons floating in the sky - representing the journey to fund travel"
           width="500"
           height="400"
           priority={true}
           sizes="(max-width: 768px) 100vw, 500px"
-        />
+         />
       </div>
     </div>
   </section>

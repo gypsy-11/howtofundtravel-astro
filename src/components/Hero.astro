@@ -1,8 +1,8 @@
 ---
-import { getAssetUrl } from '../utils/assetUtils';
-
 export interface Props {
   title: string;
+  highlightText?: string;
+  titleSuffix?: string;
   subtitle?: string;
   badge?: string;
   badgeIcon?: string;
@@ -11,11 +11,15 @@ export interface Props {
   secondaryCTAText?: string;
   secondaryCTALink?: string;
   withStats?: boolean;
+  showStats?: boolean;
+  customStats?: Array<{ icon: string; text: string; }>;
   highContrast?: boolean;
 }
 
 const {
   title,
+  highlightText,
+  titleSuffix,
   subtitle,
   badge,
   badgeIcon,
@@ -24,15 +28,14 @@ const {
   secondaryCTAText,
   secondaryCTALink,
   withStats = false,
+  showStats = false,
+  customStats,
   highContrast = false
 } = Astro.props;
 
-// Get asset URL for the background image
-const heroBackgroundImage = getAssetUrl('/images/optimized/ocean-shores-transparency-xl.webp');
+// Use showStats or withStats for backward compatibility
+const shouldShowStats = showStats || withStats;
 ---
-
-<!-- Preload critical hero image -->
-<link rel="preload" as="image" href={heroBackgroundImage} fetchpriority="high">
 
 <section class={`hero ${highContrast ? 'high-contrast' : ''}`}>
   <div class="hero-content">
@@ -43,28 +46,38 @@ const heroBackgroundImage = getAssetUrl('/images/optimized/ocean-shores-transpar
       </div>
     )}
     <h1>
-      <slot name="title-highlight-start"></slot>
-      <span class="highlight"><slot name="title-highlight"></slot></span>
-      <slot name="title-highlight-end"></slot>
-      {!Astro.slots.has('title-highlight') && title}
+      {title}
+      {highlightText && <span class="highlight">{highlightText}</span>}
+      {titleSuffix}
     </h1>
     
     {subtitle && <p class="hero-subtitle">{subtitle}</p>}
     
-    {withStats && (
+    {shouldShowStats && (
       <div class="hero-stats">
-        <div class="stat-item">
-          <span class="stat-icon">🌎</span>
-          <p class="stat-text">60+ Countries<br/>Visited</p>
-        </div>
-        <div class="stat-item">
-          <span class="stat-icon">💼</span>
-          <p class="stat-text">10+ Years<br/>Remote Work</p>
-        </div>
-        <div class="stat-item">
-          <span class="stat-icon">👨‍👩‍👧‍👦</span>
-          <p class="stat-text">Family Travel<br/>Expert</p>
-        </div>
+        {customStats ? (
+          customStats.map((stat) => (
+            <div class="stat-item">
+              <span class="stat-icon">{stat.icon}</span>
+              <p class="stat-text" set:html={stat.text}></p>
+            </div>
+          ))
+        ) : (
+          <>
+            <div class="stat-item">
+              <span class="stat-icon">🌎</span>
+              <p class="stat-text">60+ Countries<br/>Visited</p>
+            </div>
+            <div class="stat-item">
+              <span class="stat-icon">💼</span>
+              <p class="stat-text">10+ Years<br/>Remote Work</p>
+            </div>
+            <div class="stat-item">
+              <span class="stat-icon">👨‍👩‍👧‍👦</span>
+              <p class="stat-text">Family Travel<br/>Expert</p>
+            </div>
+          </>
+        )}
       </div>
     )}
     
@@ -79,11 +92,11 @@ const heroBackgroundImage = getAssetUrl('/images/optimized/ocean-shores-transpar
   <slot name="after-content"></slot>
 </section>
 
-<style define:vars={{ heroBackgroundImage: `url('${heroBackgroundImage}')` }}>
+<style>
   /* Hero Component Styles */
   .hero {
     align-items: center;
-    background: var(--heroBackgroundImage) no-repeat center center;
+    background: var(--hero-bg-image) no-repeat center center;
     background-size: cover;
     color: var(--dark);
     display: flex;

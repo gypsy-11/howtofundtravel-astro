@@ -1,6 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import Image from '../../components/Image.astro';
+
 ---
 
 <BaseLayout 
@@ -61,12 +61,12 @@ import Image from '../../components/Image.astro';
         <article class="case-study-card">
           <div class="case-study-image">
             <a href="/case-studies/neurodivergent-coaching-website-seo/" class="case-study-image-link">
-              <Image 
+              <img 
                 src="/images/neurodivergent-case-study.png" 
                 alt="Neurodivergent Coaching Website SEO" 
                 class="case-study-thumbnail"
                 caption="Neurodivergent Coaching Website - SEO Optimization Results"
-              />
+               />
             </a>
           </div>
           <div class="case-study-content">
@@ -110,12 +110,12 @@ import Image from '../../components/Image.astro';
         <article class="case-study-card">
           <div class="case-study-image">
             <a href="/case-studies/mikkel-hansen-website-case-study/" class="case-study-image-link">
-              <Image 
+              <img 
                 src="/images/mikkel-case-study.png" 
                 alt="Mikkel Hansen Men's Mentoring Website" 
                 class="case-study-thumbnail"
                 caption="Mikkel Hansen - Men's Mentoring Website Design"
-              />
+               />
             </a>
           </div>
           <div class="case-study-content">
@@ -161,7 +161,7 @@ import Image from '../../components/Image.astro';
           <div class="case-study-image">
             <div class="placeholder-image">
               <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="#2A9D8F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="#2A9D8F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
               </svg>
             </div>
           </div>
@@ -211,7 +211,7 @@ import Image from '../../components/Image.astro';
   .hero {
     position: relative;
     padding: 6rem 0;
-    background: url('/images/optimized/ocean-shores-transparency.webp') no-repeat center center;
+    background: var(--hero-bg-image) no-repeat center center;
     background-size: cover;
     min-height: 80vh;
     display: flex;
