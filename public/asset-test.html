@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Static Asset Test</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    h1 {
+      color: #333;
+    }
+    .test-container {
+      border: 1px solid #ddd;
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 5px;
+    }
+    .success {
+      color: green;
+      font-weight: bold;
+    }
+    .error {
+      color: red;
+      font-weight: bold;
+    }
+    img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+      margin: 10px 0;
+    }
+    .test-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+    .test-item {
+      border: 1px solid #eee;
+      padding: 10px;
+      border-radius: 5px;
+    }
+    @font-face {
+      font-family: 'LemonTuesday';
+      src: url('/fonts/LemonTuesday.otf') format('opentype');
+    }
+    .custom-font {
+      font-family: 'LemonTuesday', cursive;
+      font-size: 24px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Static Asset Test Page</h1>
+  <p>This page tests if static assets are being served correctly from Vercel.</p>
+
+  <div class="test-container">
+    <h2>1. Logo Test</h2>
+    <p>The logo should appear below:</p>
+    <img src="/images/how-to-fund-travel-logo-transparent.svg" alt="How to Fund Travel Logo" width="300">
+    <p>If you see the logo, the SVG asset is being served correctly.</p>
+  </div>
+
+  <div class="test-container">
+    <h2>2. Font Test</h2>
+    <p>The text below should use the custom font:</p>
+    <p class="custom-font">This text should use the LemonTuesday font.</p>
+    <p>If the text above has a distinctive handwritten style, the font is loading correctly.</p>
+  </div>
+
+  <div class="test-container">
+    <h2>3. Image Tests</h2>
+    <p>Various image formats should load below:</p>
+    
+    <div class="test-grid">
+      <div class="test-item">
+        <h3>SVG Image</h3>
+        <img src="/images/how-to-fund-travel-favicon.svg" alt="Favicon SVG" width="100">
+      </div>
+      
+      <div class="test-item">
+        <h3>PNG Image</h3>
+        <img src="/images/howtofundtravel-favicon.png" alt="Favicon PNG" width="100">
+      </div>
+      
+      <div class="test-item">
+        <h3>JPG Image</h3>
+        <img src="/images/20200525_153307.jpg" alt="JPG Photo" width="100">
+      </div>
+      
+      <div class="test-item">
+        <h3>WebP Image</h3>
+        <img src="/images/optimized/ocean-shores-transparency-xl.webp" alt="WebP Image" width="100">
+      </div>
+    </div>
+  </div>
+
+  <div class="test-container">
+    <h2>Results</h2>
+    <p>If all images and fonts above load correctly, your static asset serving is working properly.</p>
+    <p>If any assets failed to load, check the browser console for 404 errors.</p>
+  </div>
+
+  <script>
+    // Simple script to check if images loaded successfully
+    window.addEventListener('load', function() {
+      const images = document.querySelectorAll('img');
+      let allLoaded = true;
+      
+      images.forEach(img => {
+        if (!img.complete || img.naturalHeight === 0) {
+          allLoaded = false;
+          console.error('Failed to load image:', img.src);
+          
+          // Add error message below the image
+          const errorMsg = document.createElement('p');
+          errorMsg.className = 'error';
+          errorMsg.textContent = '❌ Failed to load: ' + img.src;
+          img.parentNode.appendChild(errorMsg);
+        } else {
+          // Add success message
+          const successMsg = document.createElement('p');
+          successMsg.className = 'success';
+          successMsg.textContent = '✅ Loaded successfully';
+          img.parentNode.appendChild(successMsg);
+        }
+      });
+      
+      // Add overall result
+      const resultContainer = document.querySelector('.test-container:last-child');
+      const resultMsg = document.createElement('p');
+      resultMsg.className = allLoaded ? 'success' : 'error';
+      resultMsg.textContent = allLoaded ? 
+        '✅ All assets loaded successfully!' : 
+        '❌ Some assets failed to load. Check browser console for details.';
+      resultContainer.appendChild(resultMsg);
+    });
+  </script>
+</body>
+</html>

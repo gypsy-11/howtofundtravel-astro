@@ -1,0 +1,10 @@
+<svg width="400" height="300" viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+  <rect width="400" height="300" fill="#F9C74F"/>
+  <rect x="50" y="30" width="300" height="240" fill="white" rx="8"/>
+  <rect x="70" y="50" width="260" height="40" fill="#3BAEA0"/>
+  <text x="200" y="75" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="16" font-weight="bold">VISA RESEARCH GUIDE</text>
+  <text x="200" y="130" text-anchor="middle" fill="#264653" font-family="Arial, sans-serif" font-size="14">Family Travel Visa</text>
+  <text x="200" y="150" text-anchor="middle" fill="#264653" font-family="Arial, sans-serif" font-size="14">Requirements</text>
+  <text x="200" y="190" text-anchor="middle" fill="#3BAEA0" font-family="Arial, sans-serif" font-size="24">🛂 📋 ✈️</text>
+  <text x="200" y="230" text-anchor="middle" fill="#264653" font-family="Arial, sans-serif" font-size="12">Complete Checklist</text>
+</svg> 

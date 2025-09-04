@@ -1,0 +1,33 @@
+User-agent: *
+Allow: /
+
+# Disallow admin and private areas for all crawlers (including AI)
+Disallow: /server/
+Disallow: /node_modules/
+Disallow: /drafts/
+Disallow: /work-in-progress/
+Disallow: /configuration-guides/
+Disallow: /content-and-strategy/
+
+# Known AI and extended crawlers are welcome and follow the same rules above:
+# - GPTBot (OpenAI)
+# - ChatGPT-User (OpenAI/ChatGPT fetcher)
+# - OAI-SearchBot (OpenAI search/browse)
+# - CCBot (Common Crawl)
+# - ClaudeBot (Anthropic)
+# - Claude-Web (Anthropic web fetcher)
+# - PerplexityBot (Perplexity AI)
+# - Google-Extended (Google AI data controls)
+# - Applebot-Extended (Apple AI data controls)
+# - Amazonbot (Amazon)
+# - Bytespider (ByteDance)
+# - facebookexternalhit (Meta)
+# - Facebot (Meta)
+# - FacebookBot (Meta)
+# - omgili, omgilibot (Webz.io)
+# - MJ12bot (Majestic)
+# - DataForSeoBot (DataForSEO)
+# - AhrefsBot (Ahrefs)
+
+# Sitemap location
+Sitemap: https://howtofund.travel/sitemap.xml

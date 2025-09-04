@@ -1,0 +1,6 @@
+<svg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="30" cy="30" r="28" fill="#3BAEA0" stroke="#2A9D8F" stroke-width="2"/>
+  <rect x="18" y="22" width="24" height="16" fill="white" rx="2"/>
+  <rect x="20" y="24" width="20" height="12" fill="#2A9D8F"/>
+  <text x="30" y="31" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="8">💻</text>
+</svg> 
