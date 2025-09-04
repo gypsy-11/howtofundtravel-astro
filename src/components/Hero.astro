@@ -1,103 +1,89 @@
 ---
+import { getAssetUrl } from '../utils/assetUtils';
+
 export interface Props {
-  badgeIcon?: string;
-  badgeText?: string;
   title: string;
-  highlightText?: string;
   subtitle?: string;
-  showStats?: boolean;
-  customStats?: Array<{
-    icon: string;
-    text: string;
-  }>;
-  showActions?: boolean;
-  primaryAction?: {
-    text: string;
-    url: string;
-  };
-  secondaryAction?: {
-    text: string;
-    url: string;
-  };
+  badge?: string;
+  badgeIcon?: string;
+  ctaText?: string;
+  ctaLink?: string;
+  secondaryCTAText?: string;
+  secondaryCTALink?: string;
+  withStats?: boolean;
+  highContrast?: boolean;
 }
 
 const {
-  badgeIcon = "⭐",
-  badgeText = "Family Travel Expert",
   title,
-  highlightText,
   subtitle,
-  showStats = false,
-  customStats,
-  showActions = false,
-  primaryAction,
-  secondaryAction
+  badge,
+  badgeIcon,
+  ctaText = "Get Started",
+  ctaLink = "/resources",
+  secondaryCTAText,
+  secondaryCTALink,
+  withStats = false,
+  highContrast = false
 } = Astro.props;
+
+// Get asset URL for the background image
+const heroBackgroundImage = getAssetUrl('/images/optimized/ocean-shores-transparency-xl.webp');
 ---
 
-<section class="hero" aria-labelledby="hero-heading">
-  <!-- Preload hero background image for LCP optimization -->
-  <link rel="preload" as="image" href="/images/optimized/ocean-shores-transparency-xl.webp" fetchpriority="high">
-  
-  <div class="container">
-    <div class="hero-content">
+<!-- Preload critical hero image -->
+<link rel="preload" as="image" href={heroBackgroundImage} fetchpriority="high">
+
+<section class={`hero ${highContrast ? 'high-contrast' : ''}`}>
+  <div class="hero-content">
+    {badge && (
       <div class="hero-badge">
-        <span class="badge-icon">{badgeIcon}</span>
-        {badgeText}
+        {badgeIcon && <span class="hero-badge-icon">{badgeIcon}</span>}
+        {badge}
       </div>
-      
-      <h1 id="hero-heading">
-        {title}
-        {highlightText && <span class="highlight">{highlightText}</span>}
-      </h1>
-      
-      {subtitle && <p class="hero-subtitle">{subtitle}</p>}
-      
-      {showStats && (
-        <div class="hero-stats">
-          {customStats ? (
-            customStats.map((stat) => (
-              <div class="stat-item">
-                <span class="stat-icon">{stat.icon}</span>
-                <span class="stat-text" set:html={stat.text}></span>
-              </div>
-            ))
-          ) : (
-            <>
-              <div class="stat-item">
-                <span class="stat-icon">🌍</span>
-                <span class="stat-text">5+ Years<br>Traveling</span>
-              </div>
-              <div class="stat-item">
-                <span class="stat-icon">👨‍👩‍👧‍👦</span>
-                <span class="stat-text">Family of<br>Six</span>
-              </div>
-              <div class="stat-item">
-                <span class="stat-icon">💰</span>
-                <span class="stat-text">Multiple Income<br>Streams</span>
-              </div>
-            </>
-          )}
+    )}
+    <h1>
+      <slot name="title-highlight-start"></slot>
+      <span class="highlight"><slot name="title-highlight"></slot></span>
+      <slot name="title-highlight-end"></slot>
+      {!Astro.slots.has('title-highlight') && title}
+    </h1>
+    
+    {subtitle && <p class="hero-subtitle">{subtitle}</p>}
+    
+    {withStats && (
+      <div class="hero-stats">
+        <div class="stat-item">
+          <span class="stat-icon">🌎</span>
+          <p class="stat-text">60+ Countries<br/>Visited</p>
         </div>
-      )}
-      
-      {showActions && primaryAction && (
-        <div class="hero-actions">
-          <a href={primaryAction.url} class="btn btn-primary">{primaryAction.text}</a>
-          {secondaryAction && (
-            <a href={secondaryAction.url} class="btn btn-secondary">{secondaryAction.text}</a>
-          )}
+        <div class="stat-item">
+          <span class="stat-icon">💼</span>
+          <p class="stat-text">10+ Years<br/>Remote Work</p>
         </div>
+        <div class="stat-item">
+          <span class="stat-icon">👨‍👩‍👧‍👦</span>
+          <p class="stat-text">Family Travel<br/>Expert</p>
+        </div>
+      </div>
+    )}
+    
+    <div class="hero-actions">
+      <a href={ctaLink} class="btn btn-primary">{ctaText}</a>
+      {secondaryCTAText && secondaryCTALink && (
+        <a href={secondaryCTALink} class="btn btn-secondary">{secondaryCTAText}</a>
       )}
     </div>
   </div>
+  
+  <slot name="after-content"></slot>
 </section>
 
-<style>
-  /* Hero-specific styles optimized for LCP */
+<style define:vars={{ heroBackgroundImage: `url('${heroBackgroundImage}')` }}>
+  /* Hero Component Styles */
   .hero {
     align-items: center;
-    background: url('/images/optimized/ocean-shores-transparency-xl.webp') no-repeat center center;
+    background: var(--heroBackgroundImage) no-repeat center center;
     background-size: cover;
     color: var(--dark);
     display: flex;
@@ -105,9 +91,20 @@ const {
     padding: 6rem 0;
     position: relative;
     text-align: center;
-    /* Optimize background image loading */
     background-attachment: scroll;
     will-change: transform;
+  }
+  
+  /* High contrast version for better accessibility */
+  .hero.high-contrast::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.75);
+    z-index: 1;
   }
   
   .hero-content {
@@ -185,7 +182,7 @@ const {
     justify-content: center;
   }
   
-  /* Responsive design */
+  /* Responsive styles */
   @media (max-width: 768px) {
     .hero h1 {
       font-size: 2.5rem;

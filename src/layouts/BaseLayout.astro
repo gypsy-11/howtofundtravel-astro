@@ -5,6 +5,10 @@ import '../styles/fonts.css';
 import '../styles/critical.css';
 import '../styles/main.css';
 import '../styles/blog.css';
+import { importCriticalAssets, getAssetUrl } from '../utils/assetUtils';
+
+// Import critical assets to ensure Vite processes them correctly
+importCriticalAssets();
 
 export interface Props {
   title: string;
@@ -85,6 +89,11 @@ const generateStructuredData = () => {
 };
 
 const structuredData = generateStructuredData();
+
+// Get asset URLs for preloading
+const oceanShorestTransparencyXl = getAssetUrl('/images/optimized/ocean-shores-transparency-xl.webp');
+const logoTransparent = getAssetUrl('/images/how-to-fund-travel-logo-transparent.svg');
+const lemonTuesdayFont = getAssetUrl('/fonts/LemonTuesday.otf');
 ---
 
 <!DOCTYPE html>
@@ -101,11 +110,11 @@ const structuredData = generateStructuredData();
     ))}
     
     <!-- Preload critical resources for LCP optimization -->
-    <link rel="preload" href="/images/optimized/ocean-shores-transparency-xl.webp" as="image" fetchpriority="high">
-    <link rel="preload" href="/images/how-to-fund-travel-logo-transparent.svg" as="image">
+    <link rel="preload" href={oceanShorestTransparencyXl} as="image" fetchpriority="high">
+    <link rel="preload" href={logoTransparent} as="image">
     
     <!-- Preload critical fonts with display=swap -->
-    <link rel="preload" href="/fonts/LemonTuesday.otf" as="font" type="font/otf" crossorigin>
+    <link rel="preload" href={lemonTuesdayFont} as="font" type="font/otf" crossorigin>
     
     <!-- DNS prefetch for external resources -->
     <link rel="dns-prefetch" href="//www.googletagmanager.com">

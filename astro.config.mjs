@@ -2,6 +2,7 @@
 import { defineConfig } from 'astro/config';
 import vercel from '@astrojs/vercel';
 import mdx from '@astrojs/mdx';
+import assetResolverPlugin from './src/vite-plugins/assetResolver';
 
 // https://astro.build/config
 export default defineConfig({
@@ -30,7 +31,25 @@ export default defineConfig({
           entryFileNames: 'assets/[name]-[hash].js',
           assetFileNames: 'assets/[name]-[hash].[ext]'
         }
+      },
+      // Prevent warnings for certain asset patterns
+      assetsInlineLimit: 0 // Don't inline assets
+    },
+    // Improve asset handling in CSS and preloads
+    assetsInclude: ['**/*.otf', '**/*.webp'],
+    // Ensure paths in CSS are properly resolved
+    css: {
+      devSourcemap: true,
+    },
+    // Ensure public directory assets are properly handled
+    publicDir: './public',
+    resolve: {
+      alias: {
+        '/images': '/public/images',
+        '/fonts': '/public/fonts'
       }
-    }
+    },
+    // Add custom plugins
+    plugins: [assetResolverPlugin()]
   }
 });
