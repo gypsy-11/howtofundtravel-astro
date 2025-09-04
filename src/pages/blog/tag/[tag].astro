@@ -2,49 +2,35 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 
-export async function getStaticPaths() {
-  const posts = await getCollection('blog');
-  
-  // Get all unique tags
-  const allTags = new Set();
-  posts.forEach(post => {
-    post.data.tags.forEach(tag => {
-      allTags.add(tag);
-    });
-  });
-  
-  return Array.from(allTags).map((tag) => ({
-    params: { 
-      tag: tag.toLowerCase().replace(/\s+/g, '-') 
-    },
-    props: { 
-      tagName: tag,
-      allPosts: posts
-    }
-  }));
-}
-
-// Get the tag from the URL params and props
+// Get the tag from the URL params
 const { tag } = Astro.params;
-const { tagName, allPosts } = Astro.props;
+
+// Get all blog posts
+const posts = await getCollection('blog');
 
 // Filter posts by tag
-const taggedPosts = allPosts.filter(post => 
+const taggedPosts = posts.filter(post => 
   post.data.tags.some(postTag => 
     postTag.toLowerCase().replace(/\s+/g, '-') === tag
   )
 );
 
 // Get the actual tag name for display
-const actualTagName = tagName;
+const actualTagName = taggedPosts.length > 0 
+  ? taggedPosts[0].data.tags.find(postTag => 
+      postTag.toLowerCase().replace(/\s+/g, '-') === tag
+    )
+  : tag;
+
+// Redirect to 404 if no posts found for this tag
+if (taggedPosts.length === 0) {
+  return Astro.redirect('/404');
+}
 
 // Sort posts by date (newest first)
 const sortedPosts = taggedPosts.sort((a, b) => 
   b.data.publishedDate.valueOf() - a.data.publishedDate.valueOf()
 );
-
-// Use allPosts for related tags calculation
-const posts = allPosts;
 ---
 
 <BaseLayout 

@@ -3,27 +3,33 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import ResponsiveImage from '../../../components/ResponsiveImage.astro';
 
-export async function getStaticPaths() {
-  const posts = await getCollection('blog');
-  
-  // Get all unique categories
-  const allCategories = [...new Set(posts.flatMap(post => post.data.category))];
-  
-  return allCategories.map((category) => ({
-    params: { 
-      category: category.toLowerCase().replace(/\s+/g, '-') 
-    },
-    props: { 
-      categoryName: category,
-      posts: posts.filter(post => post.data.category.includes(category))
-    }
-  }));
-}
-
-// Get the category from the URL params and props
+// Get the category from the URL params
 const { category: categorySlug } = Astro.params;
-const { categoryName, posts } = Astro.props;
-const category = categoryName;
+
+// Get all posts and find the matching category
+let posts = [];
+let category = '';
+
+try {
+  posts = await getCollection('blog');
+  
+  // Find the category that matches the slug
+  const allCategories = [...new Set(posts.flatMap(post => post.data.category))];
+  category = allCategories.find(cat => 
+    cat.toLowerCase().replace(/\s+/g, '-') === categorySlug
+  );
+  
+  if (category) {
+    // Filter posts by the found category
+    posts = posts.filter(post => post.data.category.includes(category));
+  } else {
+    // Category not found, redirect to 404
+    return Astro.redirect('/404');
+  }
+} catch (error) {
+  console.error('Error fetching posts:', error);
+  return Astro.redirect('/404');
+}
 
 // Sort posts by published date (newest first)
 const sortedPosts = posts.sort((a, b) => new Date(b.data.publishedDate).getTime() - new Date(a.data.publishedDate).getTime());

@@ -5,12 +5,10 @@ import mdx from '@astrojs/mdx';
 
 // https://astro.build/config
 export default defineConfig({
-  output: 'static',
+  output: 'server',
   adapter: vercel({
-    // Vercel-specific configuration for static sites
-    webAnalytics: {
-      enabled: true
-    }
+    // Vercel-specific configuration
+    maxDuration: 30
   }),
   site: 'https://howtofund.travel',
   integrations: [mdx()],
