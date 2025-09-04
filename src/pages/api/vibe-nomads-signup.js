@@ -1,6 +1,8 @@
 // Vibe Nomads community signup API endpoint
 // Enhanced with better validation, rate limiting, and spam protection
 
+export const prerender = false;
+
 import { 
   validateEmail, 
   checkRateLimit, 

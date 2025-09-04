@@ -5,13 +5,12 @@ import mdx from '@astrojs/mdx';
 
 // https://astro.build/config
 export default defineConfig({
-  output: 'server',
+  output: 'static',
   adapter: vercel({
-    // Vercel-specific configuration
+    // Vercel-specific configuration for static sites
     webAnalytics: {
       enabled: true
-    },
-    maxDuration: 30
+    }
   }),
   site: 'https://howtofund.travel',
   integrations: [mdx()],
@@ -19,12 +18,5 @@ export default defineConfig({
   // Fix: Disable auto-inlining to ensure all CSS is properly processed
   build: {
     inlineStylesheets: 'never'
-  },
-  
-  // Vite configuration for better asset handling
-  vite: {
-    build: {
-      assetsDir: 'assets'
-    }
   }
 });

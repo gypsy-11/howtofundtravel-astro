@@ -3,23 +3,19 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import BlogCategoryFilter from '../../components/BlogCategoryFilter.astro';
 
-// Get the slug from the URL params
-const { slug } = Astro.params;
-
-// Fetch the post directly (SSR approach)
-let post;
-try {
+export async function getStaticPaths() {
   const posts = await getCollection('blog');
-  post = posts.find(p => p.slug === slug && !p.data.draft);
   
-  if (!post) {
-    return Astro.redirect('/404');
-  }
-} catch (error) {
-  console.error('Error fetching blog post:', error);
-  return Astro.redirect('/404');
+  return posts
+    .filter(post => !post.data.draft)
+    .map((post) => ({
+      params: { slug: post.slug },
+      props: { post }
+    }));
 }
 
+// Get the post from props
+const { post } = Astro.props;
 const { Content } = await post.render();
 ---
 
