@@ -12,7 +12,7 @@ import Hero from '../components/Hero.astro';
   <!-- Hero Section -->
   <Hero
     badgeIcon="💬"
-    badgeText="Personalized Consultation"
+    badge="Personalized Consultation"
     title="Let's Chat About Your "
     highlightText="Travel Dreams"
     subtitle="Ready to turn your family travel dreams into reality? Book a personalized consultation to discuss your goals, challenges, and the best path forward for your unique situation."
@@ -22,14 +22,14 @@ import Hero from '../components/Hero.astro';
       { icon: "⏰", text: "15-Minute<br>Session" },
       { icon: "💡", text: "Actionable<br>Insights" }
     ]}
-  />
+   />
 
   <!-- Booking Section -->
   <section class="booking-section" aria-labelledby="booking-heading">
     <div class="container">
       <div class="section-intro">
         <h2 id="booking-heading">Schedule Your Free Call</h2>
-        <p>Choose a time that works for you and let's discuss your family travel funding goals.</p>
+        <p>Choose a time that works for you and let us discuss your family travel funding goals.</p>
         <div class="divider"></div>
       </div>
       
@@ -37,7 +37,7 @@ import Hero from '../components/Hero.astro';
         <div class="booking-info">
           <h3>What to Expect</h3>
           <ul class="expectations-list">
-            <li><strong>Personal Assessment:</strong> We'll discuss your current situation and travel goals</li>
+            <li><strong>Personal Assessment:</strong> We&apos;ll discuss your current situation and travel goals</li>
             <li><strong>Strategy Discussion:</strong> Explore the best funding methods for your family</li>
             <li><strong>Next Steps:</strong> Get a clear action plan tailored to your needs</li>
             <li><strong>Q&A:</strong> Ask any questions about location independence and travel funding</li>
@@ -47,7 +47,7 @@ import Hero from '../components/Hero.astro';
             <h4>Before Our Call</h4>
             <p>Take a moment to think about:</p>
             <ul>
-              <li>Your family's travel timeline and goals</li>
+              <li>Your family&apos;s travel timeline and goals</li>
               <li>Current income sources and skills</li>
               <li>Biggest challenges or concerns</li>
               <li>What success looks like for your family</li>
@@ -79,8 +79,8 @@ import Hero from '../components/Hero.astro';
         </div>
         
         <div class="faq-item">
-          <h3>What if I'm not ready to start traveling yet?</h3>
-          <p>That's perfectly fine! Many families start planning years in advance. We can discuss your timeline and create a roadmap for achieving your goals, whether you want to start next month or in a few years.</p>
+          <h3>What if I&apos;m not ready to start traveling yet?</h3>
+          <p>That&apos;s perfectly fine! Many families start planning years in advance. We can discuss your timeline and create a roadmap for achieving your goals, whether you want to start next month or in a few years.</p>
         </div>
         
         <div class="faq-item">
@@ -90,7 +90,7 @@ import Hero from '../components/Hero.astro';
         
         <div class="faq-item">
           <h3>What if I need more help after our call?</h3>
-          <p>During our consultation, I'll let you know about additional resources, courses, or coaching options that might be helpful for your specific situation. There's no pressure to purchase anything.</p>
+          <p>During our consultation, I&apos;ll let you know about additional resources, courses, or coaching options that might be helpful for your specific situation. There&apos;s no pressure to purchase anything.</p>
         </div>
       </div>
     </div>
@@ -99,85 +99,6 @@ import Hero from '../components/Hero.astro';
 
 <style>
   /* LemonTuesday font is now loaded from local file via main.css */
-
-  /* Hero Section */
-  .hero {
-    position: relative;
-    padding: 6rem 0;
-    background: url('/images/optimized/ocean-shores-transparency.webp') no-repeat center center;
-    background-size: cover;
-    min-height: 80vh;
-    display: flex;
-    align-items: center;
-    color: var(--dark);
-    text-align: center;
-  }
-
-  .hero-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    background: rgba(255, 255, 255, 0.2);
-    padding: 0.5rem 1rem;
-    border-radius: 25px;
-    font-size: 0.9rem;
-    font-weight: 600;
-    margin-bottom: 1.5rem;
-  }
-
-  .hero-content {
-    position: relative;
-    z-index: 2;
-    max-width: 800px;
-    margin: 0 auto;
-  }
-
-  .hero h1 {
-    color: var(--dark);
-    margin-bottom: 1.5rem;
-    text-shadow: 0 2px 4px rgba(255, 255, 255, 0.8);
-    font-size: 3.5rem;
-    font-weight: 700;
-    line-height: 1.2;
-  }
-
-  .hero .highlight {
-    font-family: 'LemonTuesday', 'Shadows Into Light', cursive;
-    color: #2A9D8F;
-  }
-
-  .hero-subtitle {
-    color: var(--dark);
-    margin-bottom: 2rem;
-    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
-    font-weight: 500;
-    font-size: 1.25rem;
-    line-height: 1.6;
-  }
-
-  .hero-stats {
-    display: flex;
-    justify-content: center;
-    gap: 2rem;
-    margin-bottom: 2rem;
-  }
-
-  .stat-item {
-    text-align: center;
-  }
-
-  .stat-icon {
-    font-size: 2rem;
-    display: block;
-    margin-bottom: 0.5rem;
-  }
-
-  .stat-text {
-    font-size: 0.9rem;
-    font-weight: 600;
-    opacity: 0.9;
-    line-height: 1.3;
-  }
 
   /* Booking Section */
   .booking-section {

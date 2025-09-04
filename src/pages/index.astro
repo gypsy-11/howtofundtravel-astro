@@ -1,6 +1,5 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import Image from '../components/Image.astro';
 import Hero from '../components/Hero.astro';
 import JobSitesFullWidth from '../components/lead-magnets/JobSitesFullWidth.astro';
 
@@ -20,21 +19,17 @@ const image = "/images/optimized/how-to-fund-travel-balloons-hero.webp";
 <BaseLayout title={title} description={description} image={image}>
   <!-- Hero Section -->
   <Hero
+    badge="Family Travel Expert"
     badgeIcon="⭐"
-    badgeText="Family Travel Expert"
     title="Transform Your "
     highlightText="Dream Family"
-    subtitle="Travel Into Reality. Learn proven strategies to fund your travels, build location independence, and create a life of adventure with your family. Start your journey today."
-    showStats={true}
-    showActions={true}
-    primaryAction={{
-      text: "Start Your Journey",
-      url: "https://vibenomads.org"
-    }}
-    secondaryAction={{
-      text: "Read Success Stories",
-      url: "/case-studies/"
-    }}
+    titleSuffix=" Travel Into Reality"
+    subtitle="Learn proven strategies to fund your travels, build location independence, and create a life of adventure with your family. Start your journey today."
+    withStats={true}
+    ctaText="Start Your Journey"
+    ctaLink="https://vibenomads.org"
+    secondaryCTAText="Read Success Stories"
+    secondaryCTALink="/case-studies/"
   />
 
   <!-- Story Section -->
@@ -46,15 +41,13 @@ const image = "/images/optimized/how-to-fund-travel-balloons-hero.webp";
       </div>
       <div class="story-content">
         <div class="story-image">
-          <Image
+          <img
             src="/images/melissa-profile-how-to-fund-travel.png"
             alt="Melissa, founder of How to Fund Travel"
             width="400"
             height="500"
-            priority={true}
-            sizes="(max-width: 768px) 100vw, 400px"
-            caption="Melissa - Family Travel Expert and Digital Nomad"
-          />
+            loading="eager"
+           />
         </div>
         <div class="story-text">
           <p>Hi there! I'm Melissa, the founder of How to Fund Travel. Buckle up, because my journey to get here has been anything but ordinary.</p>
@@ -123,14 +116,13 @@ const image = "/images/optimized/how-to-fund-travel-balloons-hero.webp";
         {sortedPosts.map((post) => (
           <article class="post-card">
             <a href={post.url} class="post-image">
-              <Image
+              <img
                 src={post.frontmatter.image || "/images/blog/default-blog-image.jpg"}
                 alt={post.frontmatter.title}
                 width="380"
                 height="220"
                 loading="lazy"
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-              />
+               />
             </a>
             <div class="post-category">{post.frontmatter.category}</div>
             <h3 class="post-title">
@@ -151,7 +143,7 @@ const image = "/images/optimized/how-to-fund-travel-balloons-hero.webp";
   </section>
 
   <!-- Job Sites Full Width Section -->
-  <JobSitesFullWidth />
+  <JobSitesFullWidth  />
 
   <!-- Why Choose Section -->
   <section class="why-choose-section" aria-labelledby="why-choose-heading">
@@ -186,93 +178,6 @@ const image = "/images/optimized/how-to-fund-travel-balloons-hero.webp";
 </BaseLayout>
 
 <style>
-  .hero {
-    align-items: center;
-    background: url('/images/optimized/ocean-shores-transparency-xl.webp') no-repeat center center;
-    background-size: cover;
-    color: var(--dark);
-    display: flex;
-    min-height: 80vh;
-    padding: 6rem 0;
-    position: relative;
-    text-align: center;
-  }
-  
-  .hero-content {
-    margin: 0 auto;
-    max-width: 800px;
-    position: relative;
-    z-index: 2;
-  }
-  
-  .hero-badge {
-    align-items: center;
-    background: var(--primary-color);
-    border-radius: 25px;
-    color: var(--white);
-    display: inline-flex;
-    font-size: 0.9rem;
-    font-weight: 600;
-    gap: 0.5rem;
-    margin-bottom: 1.5rem;
-    padding: 0.5rem 1rem;
-  }
-  
-  .hero h1 {
-    color: var(--dark);
-    font-size: 3.5rem;
-    font-weight: 700;
-    line-height: 1.2;
-    margin-bottom: 1.5rem;
-    text-shadow: 0 2px 4px hsla(0, 0%, 100%, 0.8);
-  }
-  
-  .highlight {
-    color: #2a9d8f;
-    font-family: 'LemonTuesday', 'Shadows Into Light', cursive;
-  }
-  
-  .hero-subtitle {
-    color: var(--dark);
-    font-size: 1.25rem;
-    font-weight: 500;
-    line-height: 1.6;
-    margin-bottom: 2rem;
-    text-shadow: 0 1px 2px hsla(0, 0%, 100%, 0.8);
-  }
-  
-  .hero-stats {
-    display: flex;
-    gap: 2rem;
-    justify-content: center;
-    margin-bottom: 2rem;
-  }
-  
-  .stat-item {
-    text-align: center;
-  }
-  
-  .stat-icon {
-    display: block;
-    font-size: 2rem;
-    margin-bottom: 0.5rem;
-  }
-  
-  .stat-text {
-    color: var(--dark);
-    font-size: 0.9rem;
-    font-weight: 600;
-    line-height: 1.3;
-    text-shadow: 0 1px 2px hsla(0, 0%, 100%, 0.8);
-  }
-  
-  .hero-actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    justify-content: center;
-  }
-  
   .story-section {
     background: #f8f9fa;
     padding: 6rem 0;
