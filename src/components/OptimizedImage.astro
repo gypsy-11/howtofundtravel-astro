@@ -33,7 +33,8 @@ const {
 } = Astro.props;
 
 // Use optimized image path if available
-const optimizedSrc = src.replace('/images/', '/images/optimized/');
+// Fix: Only replace if not already pointing to optimized folder
+const optimizedSrc = src.includes('/images/optimized/') ? src : src.replace('/images/', '/images/optimized/');
 ---
 
 <img

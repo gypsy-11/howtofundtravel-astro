@@ -30,7 +30,8 @@ const {
 
 // Generate optimized image paths
 const baseName = src.replace(/\.[^/.]+$/, ""); // Remove extension
-const optimizedSrc = src.replace('/images/', '/images/optimized/');
+// Fix: Only replace if not already pointing to optimized folder
+const optimizedSrc = src.includes('/images/optimized/') ? src : src.replace('/images/', '/images/optimized/');
 // Fix case-sensitive extension replacement
 const optimizedSrcLower = optimizedSrc.replace(/\.[^/.]+$/, path.extname(src).toLowerCase());
 const webpSrc = optimizedSrcLower.replace(/\.[^/.]+$/, '.webp');
