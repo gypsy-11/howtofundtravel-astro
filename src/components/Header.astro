@@ -7,13 +7,11 @@ const currentPath = Astro.url.pathname;
   <div class="container">
     <nav class="main-nav" aria-label="Main Navigation">
       <a href="/" class="logo" aria-label="How to Fund Travel Home">
-        <!-- TODO: Crop logo whitespace to improve sizing and appearance -->
-        <img src="/images/how-to-fund-travel-logo-transparent.svg" alt="How to Fund Travel Logo" width="450" height="96" loading="lazy">
+        <img src="/images/how-to-fund-travel-logo-transparent.svg" alt="How to Fund Travel Logo" width="450" height="96" loading="eager">
       </a>
       
       <button class="mobile-menu-toggle" aria-label="Toggle Menu" aria-expanded="false">
-        <span class="sr-only">Menu</span>
-        <span class="hamburger"></span>
+        Menu
       </button>
       
       <ul class="nav-links">
@@ -33,6 +31,64 @@ const currentPath = Astro.url.pathname;
 <!-- Mobile menu backdrop -->
 <div class="mobile-menu-backdrop" aria-hidden="true"></div>
 
+<style>
+/* Header specific styles */
+.mobile-menu-toggle {
+  display: none;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-weight: bold;
+  z-index: 1000;
+}
+
+@media (max-width: 768px) {
+  .site-header {
+    padding: 10px 0;
+  }
+  
+  .main-nav {
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+  }
+  
+  .logo img {
+    height: 60px;
+    width: auto;
+  }
+  
+  .mobile-menu-toggle {
+    display: block;
+  }
+  
+  .nav-links {
+    display: none;
+    flex-direction: column;
+    width: 100%;
+    text-align: center;
+    gap: 10px;
+  }
+  
+  .nav-links.nav-open {
+    display: flex;
+  }
+  
+  .header-actions {
+    display: none;
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .header-actions.show-mobile {
+    display: flex;
+  }
+}
+</style>
+
 <script>
   // Enhanced mobile menu functionality
   document.addEventListener('DOMContentLoaded', function() {
@@ -50,15 +106,6 @@ const currentPath = Astro.url.pathname;
       mobileMenuToggle?.classList.add('active');
       backdrop?.classList.add('active');
       body.classList.add('nav-open');
-      
-      // Focus management
-      const firstLink = navLinks?.querySelector('a');
-      firstLink?.focus();
-      
-      // Track mobile menu open
-      if (typeof trackMobileMenuToggle === 'function') {
-        trackMobileMenuToggle(true);
-      }
     }
     
     // Function to close mobile menu
@@ -69,14 +116,6 @@ const currentPath = Astro.url.pathname;
       mobileMenuToggle?.classList.remove('active');
       backdrop?.classList.remove('active');
       body.classList.remove('nav-open');
-      
-      // Return focus to toggle button
-      mobileMenuToggle?.focus();
-      
-      // Track mobile menu close
-      if (typeof trackMobileMenuToggle === 'function') {
-        trackMobileMenuToggle(false);
-      }
     }
     
     // Toggle mobile menu
@@ -117,69 +156,5 @@ const currentPath = Astro.url.pathname;
         closeMobileMenu();
       }
     });
-    
-    // Header scroll behavior (desktop only)
-    let lastScrollTop = 0;
-    const header = document.querySelector('.site-header');
-    
-    window.addEventListener('scroll', function() {
-      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-      
-      if (window.innerWidth > 768) { // Desktop only
-        if (scrollTop > lastScrollTop && scrollTop > 100) {
-          // Scrolling down
-          header?.classList.remove('header-visible');
-        } else {
-          // Scrolling up
-          header?.classList.add('header-visible');
-        }
-      }
-      
-      lastScrollTop = scrollTop;
-    });
-    
-    // Smooth scrolling for anchor links
-    const anchorLinks = document.querySelectorAll('a[href^="#"]');
-    
-    anchorLinks.forEach(link => {
-      link.addEventListener('click', function(e) {
-        const href = this.getAttribute('href');
-        
-        // Skip if it's just "#" or empty
-        if (href === '#' || href === '') return;
-        
-        const targetElement = document.querySelector(href);
-        
-        if (targetElement) {
-          e.preventDefault();
-          
-          // Close mobile menu if open
-          if (navLinks?.classList.contains('nav-open')) {
-            closeMobileMenu();
-          }
-          
-          // Calculate offset for fixed header
-          const headerHeight = header?.offsetHeight || 0;
-          const targetPosition = targetElement.offsetTop - headerHeight - 20; // 20px buffer
-          
-          // Smooth scroll to target
-          window.scrollTo({
-            top: targetPosition,
-            behavior: 'smooth'
-          });
-          
-          // Update URL hash without jumping
-          history.pushState(null, null, href);
-        }
-      });
-    });
   });
-  
-
-
-
-  
 </script>
-
-<style>
-</style>

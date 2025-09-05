@@ -1,11 +1,13 @@
 ---
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-import '../styles/fonts.css';
-import '../styles/critical.css';
-import '../styles/vercel-fallback.css';
-import '../styles/main.css';
-import '../styles/blog.css';
+
+// Load styles directly in component to avoid 404s
+const fontCss = await import('../styles/fonts.css?inline');
+const criticalCss = await import('../styles/critical.css?inline');
+const fallbackCss = await import('../styles/vercel-fallback.css?inline');
+const mainCss = await import('../styles/main.css?inline');
+const blogCss = await import('../styles/blog.css?inline');
 
 export interface Props {
   title: string;
@@ -136,6 +138,13 @@ const structuredData = generateStructuredData();
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Open+Sans:wght@400;500;600&family=Shadows+Into+Light&display=swap" rel="stylesheet">
+    
+    <!-- Inline all CSS to avoid 404 errors -->
+    <style is:inline set:html={fontCss.default}></style>
+    <style is:inline set:html={criticalCss.default}></style>
+    <style is:inline set:html={fallbackCss.default}></style>
+    <style is:inline set:html={mainCss.default}></style>
+    <style is:inline set:html={blogCss.default}></style>
     
     <!-- Inline Critical CSS -->
     <style is:inline>

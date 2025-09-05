@@ -9,30 +9,30 @@ export default defineConfig({
   adapter: vercel({
     // Vercel-specific configuration
     maxDuration: 30,
-    // Fix: Ensure CSS files are properly processed
+    // Enable image service
     imageService: true
   }),
   site: 'https://howtofund.travel',
   integrations: [mdx()],
   
-  // Fix: Use hybrid mode for better CSS handling
+  // Ensure all styles are inlined to avoid 404 errors
   build: {
-    inlineStylesheets: 'auto'
+    inlineStylesheets: 'always'
   },
   
-  // Fix: Ensure proper asset resolution
+  // Fix asset handling
   vite: {
     build: {
       assetsInlineLimit: 0, // Don't inline any assets as base64
-      cssCodeSplit: true, // Split CSS into smaller files
+      cssCodeSplit: false, // Don't split CSS to avoid missing files
       rollupOptions: {
         output: {
           // Use a simpler naming pattern for assets
-          assetFileNames: 'assets/[name]-[hash:8][extname]',
+          assetFileNames: 'assets/[name].[ext]',
           // Ensure chunks are properly named
-          chunkFileNames: 'chunks/[name]-[hash:8].js',
+          chunkFileNames: 'chunks/[name].js',
           // Ensure entry files are properly named
-          entryFileNames: 'entries/[name]-[hash:8].js'
+          entryFileNames: 'entries/[name].js'
         }
       }
     },
