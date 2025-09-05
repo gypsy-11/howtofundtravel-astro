@@ -1,0 +1,85 @@
+/* Vercel Fallback CSS - Ensures basic styling if external CSS fails to load */
+
+/* Reset */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Basic Typography */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color: #264653;
+  background-color: #fff;
+  line-height: 1.6;
+}
+
+/* Basic Layout */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* Hero Fallback */
+.hero {
+  position: relative;
+  padding: 6rem 0;
+  background: #f8f9fa url('/images/optimized/ocean-shores-transparency-xl.webp') no-repeat center center;
+  background-size: cover;
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  color: #264653;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* Header Fallback */
+header {
+  position: relative;
+  z-index: 1000;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 1rem 0;
+}
+
+/* Button Fallback */
+.btn {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.btn-primary {
+  background-color: #3BAEA0;
+  color: #fff;
+}
+
+/* Blog Fallback */
+.blog-hero {
+  position: relative;
+  padding: 4rem 0;
+  background: #f8f9fa url('/images/optimized/ocean-shores-transparency-xl.webp') no-repeat center center;
+  background-size: cover;
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+}
+
+/* Footer Fallback */
+footer {
+  background: #264653;
+  color: #fff;
+  padding: 3rem 0;
+}
