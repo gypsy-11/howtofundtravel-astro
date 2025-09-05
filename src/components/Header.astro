@@ -40,11 +40,13 @@ const currentPath = Astro.url.pathname;
     const navLinks = document.querySelector('.nav-links');
     const backdrop = document.querySelector('.mobile-menu-backdrop');
     const body = document.body;
+    const headerActions = document.querySelector('.header-actions');
     
     // Function to open mobile menu
     function openMobileMenu() {
       mobileMenuToggle?.setAttribute('aria-expanded', 'true');
       navLinks?.classList.add('nav-open');
+      headerActions?.classList.add('show-mobile');
       mobileMenuToggle?.classList.add('active');
       backdrop?.classList.add('active');
       body.classList.add('nav-open');
@@ -63,6 +65,7 @@ const currentPath = Astro.url.pathname;
     function closeMobileMenu() {
       mobileMenuToggle?.setAttribute('aria-expanded', 'false');
       navLinks?.classList.remove('nav-open');
+      headerActions?.classList.remove('show-mobile');
       mobileMenuToggle?.classList.remove('active');
       backdrop?.classList.remove('active');
       body.classList.remove('nav-open');
